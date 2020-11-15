@@ -1,8 +1,8 @@
 /*
  * @Author: guoyawen
- * @Description: 
+ * @Description:    
  * @Date: 2020-11-15 14:52:27
- * @LastEditTime: 2020-11-15 23:02:58
+ * @LastEditTime: 2020-11-15 23:21:12
  * @LastEditors: your name
  * @FilePath: \undefinedd:\git\TrafalgarSX\TrafalgarSX.github.io\themes\hexo-theme-matery\source\js\matery.js
  */
@@ -145,13 +145,8 @@ $(function () {
 
     function showOrHideNavBg(position) {
         let showPosition = 100;
-        if (position < showPosition) {
-            $nav.addClass('nav-transparent');
-            $backTop.slideUp(300);
-        } else {
             $nav.addClass('nav-transparent');
             $backTop.slideDown(300);
-        }
     }
 
     	
