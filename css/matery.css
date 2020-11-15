@@ -2094,7 +2094,7 @@ footer .copy-right {
 }
 
 .menus_item_child {
-    background-color: rgba(255, 255, 255, .8);
+    background-color: rgba(47, 214, 41, 0.8);
     width: fit-content;
     border-radius: 10px;
     -webkit-box-shadow: 0 5px 20px -4px rgba(0, 0, 0, .5);
@@ -2118,7 +2118,7 @@ footer .copy-right {
     margin-left: -10px;
     border-width: 10px;
     border-style: solid;
-    border-color: transparent transparent rgba(255, 255, 255, .8)
+    border-color: transparent transparent rgba(21, 223, 38, 0.8)
 }
 
 .m-nav-item {
