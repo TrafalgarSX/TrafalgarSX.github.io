@@ -105,16 +105,6 @@
       </tags>
   </entry>
   <entry>
-    <title>测试自动打开markdown</title>
-    <url>/2020/11/16/ce-shi-zi-dong-da-kai-markdown/</url>
-    <content><![CDATA[<p>哈哈，马勒戈壁的，真的能用</p>
-<p>还可以，要不要试试about页面展示呢？</p>
-]]></content>
-      <tags>
-        <tag>爱好</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>newBolg</title>
     <url>/2020/11/15/newbolg/</url>
     <content><![CDATA[]]></content>
@@ -124,6 +114,16 @@
       <tags>
         <tag>normal</tag>
         <tag>日常</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>测试自动打开markdown</title>
+    <url>/2020/11/16/ce-shi-zi-dong-da-kai-markdown/</url>
+    <content><![CDATA[<p>哈哈，马勒戈壁的，真的能用</p>
+<p>还可以，要不要试试about页面展示呢？</p>
+]]></content>
+      <tags>
+        <tag>爱好</tag>
       </tags>
   </entry>
   <entry>
