@@ -20,25 +20,21 @@
     var CONFIG = {"hostname":"trafalgarsx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="C++创建对象： Object obj;实例化方法 在栈中分配内存    Object* object &#x3D;new Object();动态分配内存   new和malloc的区别 new必须delete删除 不用new系统会自动回收   new 建造一个有对象，并调用对象的构造函数初始化对象：第一步申请内存，第二步调用构造函数初始化对象，第三步返回指针所指向对象的类型和地址   delete：首先调">
+  <meta name="description" content="Redis&#x2F;MySQL  简介NoSQL, NOt only SQL, 高并发、海量数据存储解决方案。Redis、MongoDB等内存数据库。 Redis是完全开源的，用ANSI C编写的一个高性能的key-value数据库。 三个特点：  Redis支持数据的持久化，可以将内存中的数据存储到硬盘上，重启时可以使用。 Redis支持 list,set,zset,hash等数据结构。 Redis支持">
 <meta property="og:type" content="article">
-<meta property="og:title" content="c&#x2F;c++堆栈.md">
-<meta property="og:url" content="https://trafalgarsx.github.io/2020/11/19/c-c-dui-zhan-md/index.html">
+<meta property="og:title" content="Learning Redis">
+<meta property="og:url" content="https://trafalgarsx.github.io/2020/12/01/learning-redis/index.html">
 <meta property="og:site_name" content="guoBlog">
-<meta property="og:description" content="C++创建对象： Object obj;实例化方法 在栈中分配内存    Object* object &#x3D;new Object();动态分配内存   new和malloc的区别 new必须delete删除 不用new系统会自动回收   new 建造一个有对象，并调用对象的构造函数初始化对象：第一步申请内存，第二步调用构造函数初始化对象，第三步返回指针所指向对象的类型和地址   delete：首先调">
+<meta property="og:description" content="Redis&#x2F;MySQL  简介NoSQL, NOt only SQL, 高并发、海量数据存储解决方案。Redis、MongoDB等内存数据库。 Redis是完全开源的，用ANSI C编写的一个高性能的key-value数据库。 三个特点：  Redis支持数据的持久化，可以将内存中的数据存储到硬盘上，重启时可以使用。 Redis支持 list,set,zset,hash等数据结构。 Redis支持">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTcxMjIyMjI1OTU0NjA5?x-oss-process=image/format,png">
-<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/1f985.png?v8">
-<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/1f981.png?v8">
-<meta property="article:published_time" content="2020-11-18T20:11:18.000Z">
-<meta property="article:modified_time" content="2020-11-18T16:16:31.819Z">
+<meta property="article:published_time" content="2020-11-30T23:27:53.000Z">
+<meta property="article:modified_time" content="2020-11-30T23:27:53.000Z">
 <meta property="article:author" content="guoyawen">
-<meta property="article:tag" content="C&#x2F;C++">
-<meta property="article:tag" content="基础知识">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTcxMjIyMjI1OTU0NjA5?x-oss-process=image/format,png">
 
-<link rel="canonical" href="https://trafalgarsx.github.io/2020/11/19/c-c-dui-zhan-md/">
+<link rel="canonical" href="https://trafalgarsx.github.io/2020/12/01/learning-redis/">
 
 
 <script id="page-configurations">
@@ -51,7 +47,7 @@
   };
 </script>
 
-  <title>c/c++堆栈.md | guoBlog</title>
+  <title>Learning Redis | guoBlog</title>
   
 
 
@@ -202,7 +198,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/11/19/c-c-dui-zhan-md/">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/12/01/learning-redis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -215,7 +211,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          c/c++堆栈.md
+          Learning Redis
         </h1>
 
         <div class="post-meta">
@@ -224,9 +220,8 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-11-18 20:11:18 / 修改时间：16:16:31" itemprop="dateCreated datePublished" datetime="2020-11-18T20:11:18Z">2020-11-18</time>
+              <time title="创建时间：2020-11-30 23:27:53" itemprop="dateCreated datePublished" datetime="2020-11-30T23:27:53Z">2020-11-30</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -234,7 +229,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">学习记录</span></a>
                 </span>
             </span>
 
@@ -256,71 +251,118 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="C-创建对象："><a href="#C-创建对象：" class="headerlink" title="C++创建对象："></a>C++创建对象：</h3><ol>
-<li><p><code>Object obj;</code>实例化方法 在栈中分配内存  </p>
+        <center style="font-weight:bold;font-size:25px">Redis/MySQL</center>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>NoSQL, NOt only SQL, 高并发、海量数据存储解决方案。Redis、MongoDB等内存数据库。</p>
+<p>Redis是完全开源的，用ANSI C编写的一个高性能的key-value数据库。</p>
+<p>三个特点：</p>
+<ul>
+<li>Redis支持数据的持久化，可以将内存中的数据存储到硬盘上，重启时可以使用。</li>
+<li>Redis支持 list,set,zset,hash等数据结构。</li>
+<li>Redis支持数据的备份，即<strong>master-slave模式的数据备份</strong>(不懂)</li>
+<li>速度快、支持语言多、持久化、多种数据结构、主从复制以及高可用与分布式。</li>
+</ul>
+<!-- most -->
+
+<h3 id="Redis的安装和使用"><a href="#Redis的安装和使用" class="headerlink" title="Redis的安装和使用"></a>Redis的安装和使用</h3><h5 id="Windows下安装："><a href="#Windows下安装：" class="headerlink" title="Windows下安装："></a>Windows下安装：</h5><p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/tporadowski/redis/releases">Redis下载链接</a></p>
+<h5 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h5><p>常规：进入redis安装目录，运行一下命令</p>
+<blockquote>
+<p>redis-server.exe redis.windows.conf    <strong>开启redis服务端</strong></p>
+<p>redis-cli.exe -h 127.0.0.1 -p 6379 <strong>连接redis服务器并使用</strong></p>
+</blockquote>
+<p>如果出现  **# Creating Server TCP listening socket 127.0.0.1:6379: bind: No error ** 错误</p>
+<p>则在命令行中运行</p>
+<blockquote>
+<p>redis-cli.exe<br>shutdown<br>exit</p>
+</blockquote>
+<p>配置文件中可以修改 Redis的连接密码   <strong>requirepass</strong> 字段  后面可以修改，修改密码要重启</p>
+<blockquote>
+<p>service redis restart</p>
+</blockquote>
+<blockquote>
+<p>redis-cli.exe -h 127.0.0.1 -p 6379 -a  [password]</p>
+<p>或者 登录时不指定密码    进入redis命令行后 运行 auth [password]</p>
+</blockquote>
+<h5 id="Redis数据类型"><a href="#Redis数据类型" class="headerlink" title="Redis数据类型"></a>Redis数据类型</h5><p><strong>string</strong>是redis最基本的类型，二进制安全，redis的string可以包含任何数据，比如jpg图片或者序列化的对象，最大能存储512MB。使用场景：缓存、秒杀、分布式锁、配置中心、对象序列化</p>
+<p><strong>Hash</strong> 键值对集合，一个string类型的field 和value的映射标，特别适用于存储对象。 <strong><em>HMSET key member(key value)</em></strong>   Map类型</p>
+<p><strong>List列表</strong> 简单的字符串列表，按照插入顺序排序。可以在头部或者尾部插入。lpush rpush lrange，可以存储2的32次方-1个元素。 消息队列、最新消息排行榜</p>
+<p><strong>Set(集合)</strong> string类型的无序集合，通过hash标实现的，<del>添加，删除，查找的复杂度都是O（1）</del>**<em>sadd key member**</em>    共同好友，交集</p>
+<p><strong>zset(有序集合）</strong> string类型元素的集合，不允许重复的成员。但每个元素都会关联一个double类型的分数，redis通过这个分数为集合中的成员从小到大排序 <strong><em>zadd key score member</em></strong>  排行榜，带权重的消息队列</p>
+<h5 id="Redis数据库"><a href="#Redis数据库" class="headerlink" title="Redis数据库"></a>Redis数据库</h5><p>Redis支持多个数据库，每个数据库的数据是隔离的不能共享（单机）<br>Redis 默认支持16个数据库，配置文件(redis.windows.conf 的databases值 或者redis.conf(linux))可以支持更多，没有上限，可以用 select命令来更换数据库。默认连接0号数据库</p>
+<p>以上都是基于单机redis的情况。集群情况下只有一个db0，不能使用select命令来切换数据库。</p>
+<h5 id="Redis-keys命令"><a href="#Redis-keys命令" class="headerlink" title="Redis keys命令"></a>Redis keys命令</h5><table>
+<thead>
+<tr>
+<th><center>命令及描述</center></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>del key 删除Key</td>
+</tr>
+<tr>
+<td>dump key 序列化给定Key，并给定序列化的值</td>
+</tr>
+<tr>
+<td>exists key  是否存在key</td>
+</tr>
+<tr>
+<td>expire key seconds  key 设置过期时间</td>
+</tr>
+<tr>
+<td>keys pattern 查找符合给定模式pattern的key</td>
+</tr>
+<tr>
+<td>type key 返回key所存储的值的类型</td>
+</tr>
+<tr>
+<td>rename key newkey  修改Key的名称</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>redis常用字符串命令 string相关</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>set key value</td>
+</tr>
+<tr>
+<td>get key</td>
+</tr>
+<tr>
+<td>getrange key start end key中字符串的子字符串</td>
+</tr>
+<tr>
+<td>incr key 将Key中存储的数字值加一</td>
+</tr>
+</tbody></table>
+<h5 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h5><ul>
+<li>数据缓存（页面具体数据），页面缓存（商品内容，新闻内容）</li>
+<li>分布式级群中架构的Session分离</li>
+<li>应用排行榜，在线好友列表</li>
+<li>任务队列，如抢购秒杀等。</li>
+</ul>
+<p>Redis在Java中的使用我将写成小demo上传到github上，后续补充链接。。。。</p>
+<h3 id="MySQL的安装和使用"><a href="#MySQL的安装和使用" class="headerlink" title="MySQL的安装和使用"></a>MySQL的安装和使用</h3><p>MySQL的安装、使用步骤。（备忘）</p>
+<h5 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h5><p>待补充。。。。。</p>
+<h5 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h5><p>以下是安装5.7版本步骤</p>
+<ol>
+<li><p>运行以下命令更新YUM源。</p>
+<pre><code>rpm -Uvh  http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm</code></pre>
 </li>
-<li><p><code>Object* object =new Object();</code>动态分配内存</p>
+<li><p>运行以下命令安装MySQL。</p>
+<pre><code>yum -y install mysql-community-server</code></pre>
+</li>
+<li><p>运行以下命令查看MySQL版本号。</p>
+<pre><code>mysql -V</code></pre>
+<p>返回结果如下，表示MySQL安装成功。</p>
+<pre><code>mysql  Ver 14.14 Distrib 5.7.31, for Linux (x86_64) using  EditLine wrapper</code></pre>
 </li>
 </ol>
-<h3 id="new和malloc的区别"><a href="#new和malloc的区别" class="headerlink" title="new和malloc的区别"></a>new和malloc的区别</h3><blockquote>
-<p>new必须delete删除 不用new系统会自动回收</p>
-</blockquote>
-<blockquote>
-<p>new 建造一个有对象，并调用对象的构造函数初始化对象：第一步申请内存，第二步调用构造函数初始化对象，第三步返回指针所指向对象的类型和地址</p>
-</blockquote>
-<blockquote>
-<p>delete：首先调用析构函数，然后销毁堆内存</p>
-</blockquote>
-<blockquote>
-<p>对于非内部数据类型的对象而言，仅用malloc/free无法满足动态对象的要求。</p>
-</blockquote>
-<blockquote>
-<p>free对象无法执行析构函数</p>
-</blockquote>
-<blockquote>
-<p>new能够按照变量类型自动地分配所需空间长度，不必使用宏sizeof</p>
-</blockquote>
-<blockquote>
-<p>new 能够返回正确的指针类型</p>
-</blockquote>
-<blockquote>
-<p>new创建对象数组，只能使用对象的无参数构造函数</p>
-</blockquote>
-<blockquote>
-<p>malloc函数本身并不识别要申请的内存是什么类型，只关心内存的总字节数</p>
-</blockquote>
-<a id="more"></a>
-
-<h3 id="堆简介"><a href="#堆简介" class="headerlink" title="堆简介"></a>堆简介</h3><p>堆由开发人员分配和释放，若开发人员不释放，程序结束时由OS回收，堆内存的生长方向是</p>
-<p>由低到高。堆 是动态存储区，程序运行时分配 malloc new都是堆上操作</p>
-<h3 id="栈简介"><a href="#栈简介" class="headerlink" title="栈简介"></a>栈简介</h3><p>栈：由操作系统自动分配释放，用于存放函数的参数值、局部变量等。</p>
-<p>函数中定义的局部变量按照先后定义的顺序一次压入栈中。栈的内存地址生长方向由高到低，</p>
-<p>所以 后定义的变量地址低于先定义的变量</p>
-<h3 id="堆与栈的区别"><a href="#堆与栈的区别" class="headerlink" title="堆与栈的区别"></a>堆与栈的区别</h3><ul>
-<li><p>管理方式不同：栈由操作系统自动分配释放，无需手动控制；堆的申请和释放工作由程序员控制，容易产生内存泄漏。</p>
-</li>
-<li><p>空间大小不同：每个进程拥有的栈的大小远远小于堆的大小。理论上，程序员可以申请堆的大小为虚拟内存的大小。</p>
-</li>
-<li><p>生长方向不同：堆的生长方向 由低到高；栈的生长方向由高到低</p>
-</li>
-</ul>
-<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTcxMjIyMjI1OTU0NjA5?x-oss-process=image/format,png" alt="栈图"></p>
-<p> （<strong>EBP寄存器是用于访问堆栈中的数据的</strong>，它指向堆栈中间的某个位置（具体位置后文会具体讲解），<em>函数的参数地址比EBP的值高</em>，而<em>函数的局部变量地址比EBP的值低</em>，因此参数或局部变量总是通过EBP加减一定的偏移地址来访问的）</p>
-<ul>
-<li><p>分配方式不同：<strong>堆都是动态分配的，没有静态分配的堆</strong>。栈由两种分配方式：<strong>静态分配和动态分配。</strong></p>
-</li>
-<li><p><strong>静态分配</strong>是由操作系统完成，如 局部变量的分配。 <strong>动态分配</strong>是由 alloca函数进行分配，但是栈的动态分配是由操作系统进行释放，<strong>与堆不同</strong>。</p>
-</li>
-<li><p>存放内容不同：栈存放的内容，<em>函数返回地址、相关参数、局部变量和寄存器内容等</em>；堆中具体存放的内容是由<em>程序员来填充</em>的。</p>
-</li>
-<li><p>全局区：<strong>全局变量和静态变量的存储是放在一块的</strong>，初始化的全局变量和静态变量在一块区域，未初始化的全局变量和静态变量在相邻的另一块区域，程序结束后由系统释放</p>
-</li>
-<li><p>文字常量区：常量字符串放在这里，程序结束后由系统释放</p>
-</li>
-<li><p>程序代码区：存放函数体的二进制代码</p>
-</li>
-</ul>
-<p><span class="github-emoji"><span>🦅</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f985.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>  <span class="github-emoji"><span>🦁</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f981.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> </p>
+<p>还有各种配置、安装版本不同等情况参考以下链接：</p>
+<p><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/116727.html?spm=a2c4g.11186623.6.1248.67a43c9dpU9UUr#title-np4-hic-947">阿里云手动部署MySQL数据库</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903870053761037#heading-24">掘金CentOS安装MySQL详解</a></p>
 
     </div>
 
@@ -330,8 +372,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/C-C/" rel="tag"># C/C++</a>
-              <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="tag"># 基础知识</a>
+              <a href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag"># 学习</a>
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
           </div>
 
         
@@ -340,12 +382,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/11/17/another-edit/" rel="prev" title="another edit">
-      <i class="fa fa-chevron-left"></i> another edit
+    <a href="/2020/11/22/zheng-ze-biao-da-shi/" rel="prev" title="正则表达式">
+      <i class="fa fa-chevron-left"></i> 正则表达式
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/11/22/zheng-ze-biao-da-shi/" rel="next" title="正则表达式">
-      正则表达式 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/12/02/fen-bian-shi-ti-lei/" rel="next" title="分辨实体类">
+      分辨实体类 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -405,7 +447,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#C-%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">C++创建对象：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#new%E5%92%8Cmalloc%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">new和malloc的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E7%AE%80%E4%BB%8B"><span class="nav-number">3.</span> <span class="nav-text">堆简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88%E7%AE%80%E4%BB%8B"><span class="nav-number">4.</span> <span class="nav-text">栈简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E4%B8%8E%E6%A0%88%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">5.</span> <span class="nav-text">堆与栈的区别</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">Redis的安装和使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Windows%E4%B8%8B%E5%AE%89%E8%A3%85%EF%BC%9A"><span class="nav-number">2.0.1.</span> <span class="nav-text">Windows下安装：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-number">2.0.2.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.0.3.</span> <span class="nav-text">Redis数据类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.0.4.</span> <span class="nav-text">Redis数据库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis-keys%E5%91%BD%E4%BB%A4"><span class="nav-number">2.0.5.</span> <span class="nav-text">Redis keys命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD"><span class="nav-number">2.0.6.</span> <span class="nav-text">功能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">MySQL的安装和使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#windows"><span class="nav-number">3.0.1.</span> <span class="nav-text">windows</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Linux"><span class="nav-number">3.0.2.</span> <span class="nav-text">Linux</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
