@@ -1,741 +1,250 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>Learning Redis</title>
-    <url>/2020/12/01/learning-redis/</url>
-    <content><![CDATA[<center style="font-weight:bold;font-size:25px">Redis/MySQL</center>
-
-<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>NoSQL, NOt only SQL, 高并发、海量数据存储解决方案。Redis、MongoDB等内存数据库。</p>
-<p>Redis是完全开源的，用ANSI C编写的一个高性能的key-value数据库。</p>
-<p>三个特点：</p>
-<ul>
-<li>Redis支持数据的持久化，可以将内存中的数据存储到硬盘上，重启时可以使用。</li>
-<li>Redis支持 list,set,zset,hash等数据结构。</li>
-<li>Redis支持数据的备份，即<strong>master-slave模式的数据备份</strong>(不懂)</li>
-<li>速度快、支持语言多、持久化、多种数据结构、主从复制以及高可用与分布式。</li>
-</ul>
-<p><escape><a id="more"></a><escape></escape></escape></p>
-<h3 id="Redis的安装和使用"><a href="#Redis的安装和使用" class="headerlink" title="Redis的安装和使用"></a>Redis的安装和使用</h3><h5 id="Windows下安装："><a href="#Windows下安装：" class="headerlink" title="Windows下安装："></a>Windows下安装：</h5><p>下载地址：<a href="https://github.com/tporadowski/redis/releases">Redis下载链接</a></p>
-<h5 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h5><p>常规：进入redis安装目录，运行一下命令</p>
-<blockquote>
-<p>redis-server.exe redis.windows.conf    <strong>开启redis服务端</strong></p>
-<p>redis-cli.exe -h 127.0.0.1 -p 6379 <strong>连接redis服务器并使用</strong></p>
-</blockquote>
-<p>如果出现  **# Creating Server TCP listening socket 127.0.0.1:6379: bind: No error ** 错误</p>
-<p>则在命令行中运行</p>
-<blockquote>
-<p>redis-cli.exe<br>shutdown<br>exit</p>
-</blockquote>
-<p>配置文件中可以修改 Redis的连接密码   <strong>requirepass</strong> 字段  后面可以修改，修改密码要重启</p>
-<blockquote>
-<p>service redis restart</p>
-</blockquote>
-<blockquote>
-<p>redis-cli.exe -h 127.0.0.1 -p 6379 -a  [password]</p>
-<p>或者 登录时不指定密码    进入redis命令行后 运行 auth [password]</p>
-</blockquote>
-<h5 id="Redis数据类型"><a href="#Redis数据类型" class="headerlink" title="Redis数据类型"></a>Redis数据类型</h5><p><strong>string</strong>是redis最基本的类型，二进制安全，redis的string可以包含任何数据，比如jpg图片或者序列化的对象，最大能存储512MB。使用场景：缓存、秒杀、分布式锁、配置中心、对象序列化</p>
-<p><strong>Hash</strong> 键值对集合，一个string类型的field 和value的映射标，特别适用于存储对象。 <strong><em>HMSET key member(key value)</em></strong>   Map类型</p>
-<p><strong>List列表</strong> 简单的字符串列表，按照插入顺序排序。可以在头部或者尾部插入。lpush rpush lrange，可以存储2的32次方-1个元素。 消息队列、最新消息排行榜</p>
-<p><strong>Set(集合)</strong> string类型的无序集合，通过hash标实现的，<del>添加，删除，查找的复杂度都是O（1）</del>**<em>sadd key member**</em>    共同好友，交集</p>
-<p><strong>zset(有序集合）</strong> string类型元素的集合，不允许重复的成员。但每个元素都会关联一个double类型的分数，redis通过这个分数为集合中的成员从小到大排序 <strong><em>zadd key score member</em></strong>  排行榜，带权重的消息队列</p>
-<h5 id="Redis数据库"><a href="#Redis数据库" class="headerlink" title="Redis数据库"></a>Redis数据库</h5><p>Redis支持多个数据库，每个数据库的数据是隔离的不能共享（单机）<br>Redis 默认支持16个数据库，配置文件(redis.windows.conf 的databases值 或者redis.conf(linux))可以支持更多，没有上限，可以用 select命令来更换数据库。默认连接0号数据库</p>
-<p>以上都是基于单机redis的情况。集群情况下只有一个db0，不能使用select命令来切换数据库。</p>
-<h5 id="Redis-keys命令"><a href="#Redis-keys命令" class="headerlink" title="Redis keys命令"></a>Redis keys命令</h5><table>
-<thead>
-<tr>
-<th><center>命令及描述</center></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>del key 删除Key</td>
-</tr>
-<tr>
-<td>dump key 序列化给定Key，并给定序列化的值</td>
-</tr>
-<tr>
-<td>exists key  是否存在key</td>
-</tr>
-<tr>
-<td>expire key seconds  key 设置过期时间</td>
-</tr>
-<tr>
-<td>keys pattern 查找符合给定模式pattern的key</td>
-</tr>
-<tr>
-<td>type key 返回key所存储的值的类型</td>
-</tr>
-<tr>
-<td>rename key newkey  修改Key的名称</td>
-</tr>
-</tbody></table>
-<table>
-<thead>
-<tr>
-<th>redis常用字符串命令 string相关</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>set key value</td>
-</tr>
-<tr>
-<td>get key</td>
-</tr>
-<tr>
-<td>getrange key start end key中字符串的子字符串</td>
-</tr>
-<tr>
-<td>incr key 将Key中存储的数字值加一</td>
-</tr>
-</tbody></table>
-<h5 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h5><ul>
-<li>数据缓存（页面具体数据），页面缓存（商品内容，新闻内容）</li>
-<li>分布式级群中架构的Session分离</li>
-<li>应用排行榜，在线好友列表</li>
-<li>任务队列，如抢购秒杀等。</li>
-</ul>
-<p>Redis在Java中的使用我将写成小demo上传到github上，后续补充链接。。。。</p>
-<h3 id="MySQL的安装和使用"><a href="#MySQL的安装和使用" class="headerlink" title="MySQL的安装和使用"></a>MySQL的安装和使用</h3><p>MySQL的安装、使用步骤。（备忘）</p>
-<h5 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h5><p>待补充。。。。。</p>
-<h5 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h5><p>以下是安装5.7版本步骤</p>
-<ol>
-<li><p>运行以下命令更新YUM源。</p>
-<pre><code>rpm -Uvh  http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm</code></pre>
-</li>
-<li><p>运行以下命令安装MySQL。</p>
-<pre><code>yum -y install mysql-community-server</code></pre>
-</li>
-<li><p>运行以下命令查看MySQL版本号。</p>
-<pre><code>mysql -V</code></pre>
-<p>返回结果如下，表示MySQL安装成功。</p>
-<pre><code>mysql  Ver 14.14 Distrib 5.7.31, for Linux (x86_64) using  EditLine wrapper</code></pre>
-</li>
-</ol>
-<p>还有各种配置、安装版本不同等情况参考以下链接：</p>
-<p><a href="https://help.aliyun.com/document_detail/116727.html?spm=a2c4g.11186623.6.1248.67a43c9dpU9UUr#title-np4-hic-947">阿里云手动部署MySQL数据库</a></p>
-<p><a href="https://juejin.cn/post/6844903870053761037#heading-24">掘金CentOS安装MySQL详解</a></p>
-]]></content>
+<search> 
+  
+  
+    
+    <entry>
+      <title>Java基础(1)</title>
+      <link href="2020/12/08/java-ji-chu-1/"/>
+      <url>2020/12/08/java-ji-chu-1/</url>
+      
+        <content type="html"><![CDATA[<p>待写</p>]]></content>
+      
+      
       <categories>
-        <category>学习记录</category>
+          
+          <category> Java基础学习 </category>
+          
       </categories>
-      <tags>
-        <tag>学习</tag>
-        <tag>Redis</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>another edit</title>
-    <url>/2020/11/17/another-edit/</url>
-    <content><![CDATA[<h1 id="I-think-it’s-very-useful"><a href="#I-think-it’s-very-useful" class="headerlink" title="I think it’s very useful."></a>I think it’s very useful.</h1><h2 id="what-do-you-think"><a href="#what-do-you-think" class="headerlink" title="what do you think."></a>what do you think.</h2><p>haha what the fuck are you doing.</p>
-]]></content>
-      <tags>
-        <tag>Typora edit</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>newBolg</title>
-    <url>/2020/11/15/newbolg/</url>
-    <content><![CDATA[]]></content>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>spring注释/xml配置开发区别</title>
+      <link href="2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/"/>
+      <url>2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/</url>
+      
+        <content type="html"><![CDATA[<hr><p><strong>XML开发方式</strong>（XML配置繁琐）</p><p><strong>Spring注解方式（有助于学习SpringBoot）</strong></p><hr><p>主要内容：</p><ul><li>IOC与DI</li><li>Spring的3种编程风格与2种注入方式</li><li>1️⃣XML配置开发：<bean>描述依赖关系</bean></li><li>自动装配：让<bean>职责单一化</bean></li><li>2️⃣XML+注解：XML+<a href="context:component-scan">context:component-scan</a>+@Component()</li><li>@Autowired的小秘密</li><li>2️⃣JavaConfig+注解：@Configuration+@ComponentScan+@Component</li><li>3️⃣JavaConfig方式：@Configuration+@Bean</li><li>大乱斗：@ImportResource、@Component、@Bean</li><li><a href="https://zhuanlan.zhihu.com/p/72668451">主要参考内容</a></li><li><a href="https://www.cnblogs.com/shz365/p/5088289.html">配合参考内容</a></li></ul><hr><a id="more"></a><h3 id="Spring-IOC"><a href="#Spring-IOC" class="headerlink" title="Spring IOC"></a>Spring IOC</h3><p>不妨将IOC理解成一种思想，而DI是实现该思想的一种具体方式。Spring被称为IOC容器</p><p><img src="/.io//image-20201207220242109.png" alt="Spring IOC"></p><h3 id="Spring依赖注入的做法"><a href="#Spring依赖注入的做法" class="headerlink" title="Spring依赖注入的做法"></a>Spring依赖注入的做法</h3><p>通过配置信息（XML）来描述类与类之间的关系，然后通过IOC容器（Spring Context）去解析配置信息。</p><pre class=" language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!-- 配置信息：在XML中定义Bean --></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.annotation.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>    <span class="token comment" spellcheck="true">&lt;!--ref是参照的意思，在代码中表示person类中有该成员变量，依赖关系的表现--></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">ref</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.annotation.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span></code></pre><p>总结：</p><ul><li>配置信息用来描述类与类之间的关系（XML/注解/Configuration配置类都可以）</li><li>对象之间的依赖关系必须在类中定义好（依赖的成员作为成员变量，和配置中匹配）</li><li>Spring通过配置信息，用构造方法或者setter方法完成依赖注入</li></ul><h5 id="3种变成风格和两种注入方式"><a href="#3种变成风格和两种注入方式" class="headerlink" title="3种变成风格和两种注入方式"></a>3种变成风格和两种注入方式</h5><p>将Bean交给Spring管理的3种方式：</p><ul><li>XML配置</li><li>注解</li><li>@Configuration配置类</li></ul><p>注入方式：</p><ul><li>构造方法注入</li><li>setter方法注入</li></ul><p><img src="/.io//image-20201207221157075.png" alt="重点在下面"></p><h5 id="setter方法注入"><a href="#setter方法注入" class="headerlink" title="setter方法注入"></a>setter方法注入</h5><p>pom.xml</p><pre class=" language-xml"><code class="language-xml"> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">></span></span>        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-context<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>4.3.12.RELEASE<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">></span></span></code></pre><p>配置信息（setter方法注入）</p><pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>    <span class="token comment" spellcheck="true">&lt;!-- 在xml中描述类与类的配置信息 --></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>        <span class="token comment" spellcheck="true">&lt;!-- property标签表示，让Spring通过setter方法注入--></span>        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">ref</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>&lt;/bean</code></pre><p>Person类</p><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Person</span> <span class="token punctuation">{</span>    <span class="token comment" spellcheck="true">// Person依赖Car</span>    <span class="token keyword">private</span> Car car<span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">// 无参构造</span>    <span class="token keyword">public</span> <span class="token function">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>    <span class="token comment" spellcheck="true">// 有参构造</span>    <span class="token keyword">public</span> <span class="token function">Person</span><span class="token punctuation">(</span>Car car<span class="token punctuation">)</span><span class="token punctuation">{</span>        <span class="token keyword">this</span><span class="token punctuation">.</span>car <span class="token operator">=</span> car<span class="token punctuation">;</span>        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"通过构造方法注入..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token punctuation">}</span>    <span class="token comment" spellcheck="true">// setter方法</span>    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setCar</span><span class="token punctuation">(</span>Car car<span class="token punctuation">)</span> <span class="token punctuation">{</span>        <span class="token keyword">this</span><span class="token punctuation">.</span>car <span class="token operator">=</span> car<span class="token punctuation">;</span>        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"通过setter方法注入..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token punctuation">}</span>    <span class="token annotation punctuation">@Override</span>    <span class="token keyword">public</span> String <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>        <span class="token keyword">return</span> <span class="token string">"Person{"</span> <span class="token operator">+</span>                <span class="token string">"car="</span> <span class="token operator">+</span> car <span class="token operator">+</span>                <span class="token string">'}'</span><span class="token punctuation">;</span><span class="token punctuation">}</span></code></pre><p><strong><em>在XML中配置依赖信息中，使用了  Property标签，所以spring会使用 setter方法注入</em></strong></p><h5 id="构造方法注入"><a href="#构造方法注入" class="headerlink" title="构造方法注入"></a>构造方法注入</h5><pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>    <span class="token comment" spellcheck="true">&lt;!-- 在xml中描述类与类的配置信息 --></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>        <span class="token comment" spellcheck="true">&lt;!-- constructor-arg标签表示，让Spring通过构造方法注入--></span>        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>constructor-arg</span> <span class="token attr-name">ref</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>constructor-arg</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>beans</span><span class="token punctuation">></span></span></code></pre><p><strong><em>在XML中配置依赖信息中，使用了  construtor-arg 标签，所以spring会使用 构造方法注入</em></strong></p><h3 id="自动装配：单一化-lt-bean-gt-的职责"><a href="#自动装配：单一化-lt-bean-gt-的职责" class="headerlink" title="自动装配：单一化 <bean>的职责"></a>自动装配：单一化 &lt;bean&gt;的职责</h3><p>&lt;bean&gt;这个标签有两个作用:</p><ul><li>定义bean，告诉Spring哪个Bean需要交给它管理（放入容器）</li><li>维护bean与bean之间的依赖关系</li></ul><p><strong>但是代码中已经描述了类与类之间的依赖关系，所以&lt;property&gt;和&lt;constructor-arg&gt;冗余了</strong></p><ul><li>既然类结构本身包含了依赖信息，<bean>再用<property>等去描述就显得多余了</property></bean></li><li>如果类结构变动，我们还需要额外维护<bean>的依赖信息，很麻烦。比如Person新增了一个shoes字段，那么<bean>又要写一个<property>表示shoes</property></bean></bean></li></ul><h5 id="单一化职责"><a href="#单一化职责" class="headerlink" title="单一化职责"></a>单一化职责</h5><p>让&lt;bean&gt;标签职责单一化，让它只负责定义bean，把bean与bean的依赖关系转交给类自身维护</p><p>这就是自动装配</p><h5 id="两种自动装配"><a href="#两种自动装配" class="headerlink" title="两种自动装配"></a>两种自动装配</h5><p><strong>XML根标签<beans>末尾加default-autowire配置</beans></strong></p><p>全体配置： 注意第六行</p><pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span>        <span class="token attr-name">default-autowire</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>byName<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>  <span class="token comment" spellcheck="true">&lt;!--重要--></span>     <span class="token comment" spellcheck="true">&lt;!-- 在xml中只定义bean，无需配置依赖关系 --></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>beans</span><span class="token punctuation">></span></span></code></pre><p>局部自动装配（单个配置）每一个&lt;bean&gt;单独设置autowire</p><pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>    <span class="token comment" spellcheck="true">&lt;!-- 在xml中只定义bean，无需配置依赖关系 --></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span> <span class="token attr-name">autowire</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>byName<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>&lt;/bean</code></pre><h3 id="XML-注解：XML-context-component-scan-Component"><a href="#XML-注解：XML-context-component-scan-Component" class="headerlink" title="XML+注解：XML+context:component-scan+@Component"></a>XML+注解：XML+<a href="context:component-scan">context:component-scan</a>+@Component</h3><p>前面去除了&lt;bean&gt;的描述依赖的职责，<strong>这次再去除&lt;bean&gt;的定义bean的职责</strong></p><p><strong><em>这样就不需要在XML中写任何<bean>标签了。</bean></em></strong> （普通spring整合好像都是这种方式进行开发）</p><p>原来是把<bean>写在XML中，再把XML喂给Spring：</bean></p><pre class=" language-java"><code class="language-java">ApplicationContext applicationContext <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ClassPathXmlApplicationContext</span><span class="token punctuation">(</span><span class="token string">"spring-context.xml"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p><img src="/.io//image-20201207225606101.png" alt="image-20201207225606101"></p><p>spring读取配置读到了两个内容：</p><ul><li>类名</li><li>装配模式（其实这个也不是必须的，默认no，不自动装配）</li></ul><p>现在简化这两个内容： 类名，写的类中就可获得名字，装配模式（其实不是必须的）</p><p><strong><em>用带注解的类代替&lt;bean&gt;标签</em></strong></p><p>现在：都用@Component、@Service等注解标记，</p><p><img src="/.io//image-20201207225621256.png" alt="image-20201207225621256"></p><p><img src="/.io//image-20201207231250492.png" alt="image-20201207231250492"></p><p>然后XML就只需要配置<strong>有@Component注解的类就是bean，和以前&lt;bean&gt;一样一样的。</strong></p><pre class=" language-xml"><code class="language-xml"> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token namespace">context:</span>component-scan</span> <span class="token attr-name">base-package</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.annotation<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span></code></pre><p>标签的作用有两个：</p><ul><li>扫描：原先我们把写有bean定义的XML文件喂给Spring，现在则让Spring自己去指定路径下扫描bean定义</li><li>解析：让Spring具备解析注解的功能(@Component)</li></ul><p><strong>接下来还要配置自动装配的模式</strong>：</p><ul><li>@Autowired（Spring提供的） </li><li>@Resource（JSR-250定义）</li><li>@Inject（JSR-330定义）</li></ul><p>总结： 就是通过@Component注解<strong>去除 xml中的&lt;bean&gt;**，直接使用自己写的类；通过@Autowired</strong>告诉Spring 装配哪个依赖**</p><p><strong>@Autowired默认采用byType模式自动装配，如果找到多个同类型的，会根据名字匹配。都不匹配，则会报错。</strong></p><p>@Qualifier注解能指定名字，可以和@Autowired配合</p><p>这里@Autowired配置在属性上，还可以配置在setter 方法和构造函数方法上。都是自动注入。</p><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Component</span><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Person</span> <span class="token punctuation">{</span>    <span class="token comment" spellcheck="true">// 用@Autowired告知Spring：请把Car装配进来</span>    <span class="token annotation punctuation">@Autowired</span>    <span class="token keyword">private</span> Car car<span class="token punctuation">;</span>    <span class="token annotation punctuation">@Override</span>    <span class="token keyword">public</span> String <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>        <span class="token keyword">return</span> <span class="token string">"Person{"</span> <span class="token operator">+</span>                <span class="token string">"car="</span> <span class="token operator">+</span> car <span class="token operator">+</span>                <span class="token string">'}'</span><span class="token punctuation">;</span>    <span class="token punctuation">}</span><span class="token punctuation">}</span></code></pre><h3 id="JavaConfig-注解：-Configuration-ComponentScan-Component"><a href="#JavaConfig-注解：-Configuration-ComponentScan-Component" class="headerlink" title="JavaConfig+注解：@Configuration+@ComponentScan+@Component"></a>JavaConfig+注解：@Configuration+@ComponentScan+@Component</h3><p><strong>注解@Configuration</strong>，目的是让我们可以把一个<strong>普通的Java类等同于一个XML文件</strong>，而这个Java类就是JavaConfig，我们习惯称之为配置类。</p><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span> <span class="token comment" spellcheck="true">//表示这个Java类充当XML配置文件</span><span class="token annotation punctuation">@ComponentScan</span><span class="token punctuation">(</span>basePackages <span class="token operator">=</span> <span class="token string">"com.bravo.javaconfig"</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//相当于XML中的&lt;context:component-scan>标签</span><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span><span class="token punctuation">}</span></code></pre><h3 id="JavaConfig方式：-Configuration-Bean"><a href="#JavaConfig方式：-Configuration-Bean" class="headerlink" title="JavaConfig方式：@Configuration+@Bean"></a>JavaConfig方式：@Configuration+@Bean</h3><p>上面的做法<strong>并不是所谓的Java-based Container Configuration</strong>（@Configuration配置类）风格。我们虽然用到了@Configuration，但只是为了让Java配置类替代XML，最终消灭XML。</p><p>真正的Java-based Container Configuration编程风格是这样的：</p><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span>    <span class="token comment" spellcheck="true">//new一个Benz对象，通过@Bean注解告知Spring把这个bean加到容器</span>    <span class="token annotation punctuation">@Bean</span>    <span class="token keyword">public</span> Car <span class="token function">benz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>       <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Benz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token punctuation">}</span>    <span class="token comment" spellcheck="true">//new一个Bmw对象，通过@Bean注解告知Spring把这个bean加到容器</span>    <span class="token annotation punctuation">@Bean</span>    <span class="token keyword">public</span> Car <span class="token function">bmw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Bmw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token punctuation">}</span>    <span class="token comment" spellcheck="true">//new一个Person对象，通过@Bean注解告知Spring把这个bean加到容器</span>    <span class="token annotation punctuation">@Bean</span>    <span class="token keyword">public</span> Person <span class="token function">person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>        Person p <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        p<span class="token punctuation">.</span><span class="token function">setCar</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Benz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token keyword">return</span> p<span class="token punctuation">;</span>    <span class="token punctuation">}</span><span class="token punctuation">}</span></code></pre><p>Person、Benz、Bmw等类（去除@Component，那是注解开发方式）</p><p><strong>Java-based Container Configuration编程风格指的是：</strong></p><ul><li>用@Configuration把一个普通Java类变成配置类，充当XML</li><li>在配置类中写多个方法，加上@Bean把返回值对象加到Spring容器中</li><li>把配置类AppConfig喂给AnnotationConfigApplicationContext，让它像解析XML一样解析配置类</li><li>无需加@Component注解，因为我们可以手动new之后通过@Bean加入容器</li></ul><h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><ul><li><p>纯XML配置开发：没有注解，全部<bean>标签，但也可以配置自动装配</bean></p></li><li><p>注解开发不能单独存在，需要<strong>开启扫描</strong>。自动装配一般用@Autowired</p></li><li><ul><li>XML+注解：XML+<strong><a href="context:component-scan">context:component-scan</a></strong>+@Component</li><li>JavaConfig+注解：@Configuration+<strong>@ComponentScan</strong>+@Component</li></ul></li><li><p>JavaConfig方式：@Configuration+@Bean</p></li></ul>]]></content>
+      
+      
       <categories>
-        <category>日常文章</category>
+          
+          <category> spring学习 </category>
+          
       </categories>
-      <tags>
-        <tag>normal</tag>
-        <tag>日常</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>c/c++堆栈.md</title>
-    <url>/2020/11/19/c-c-dui-zhan-md/</url>
-    <content><![CDATA[<h3 id="C-创建对象："><a href="#C-创建对象：" class="headerlink" title="C++创建对象："></a>C++创建对象：</h3><ol>
-<li><p><code>Object obj;</code>实例化方法 在栈中分配内存  </p>
-</li>
-<li><p><code>Object* object =new Object();</code>动态分配内存</p>
-</li>
-</ol>
-<h3 id="new和malloc的区别"><a href="#new和malloc的区别" class="headerlink" title="new和malloc的区别"></a>new和malloc的区别</h3><blockquote>
-<p>new必须delete删除 不用new系统会自动回收</p>
-</blockquote>
-<blockquote>
-<p>new 建造一个有对象，并调用对象的构造函数初始化对象：第一步申请内存，第二步调用构造函数初始化对象，第三步返回指针所指向对象的类型和地址</p>
-</blockquote>
-<blockquote>
-<p>delete：首先调用析构函数，然后销毁堆内存</p>
-</blockquote>
-<blockquote>
-<p>对于非内部数据类型的对象而言，仅用malloc/free无法满足动态对象的要求。</p>
-</blockquote>
-<blockquote>
-<p>free对象无法执行析构函数</p>
-</blockquote>
-<blockquote>
-<p>new能够按照变量类型自动地分配所需空间长度，不必使用宏sizeof</p>
-</blockquote>
-<blockquote>
-<p>new 能够返回正确的指针类型</p>
-</blockquote>
-<blockquote>
-<p>new创建对象数组，只能使用对象的无参数构造函数</p>
-</blockquote>
-<blockquote>
-<p>malloc函数本身并不识别要申请的内存是什么类型，只关心内存的总字节数</p>
-</blockquote>
-<a id="more"></a>
-
-<h3 id="堆简介"><a href="#堆简介" class="headerlink" title="堆简介"></a>堆简介</h3><p>堆由开发人员分配和释放，若开发人员不释放，程序结束时由OS回收，堆内存的生长方向是</p>
-<p>由低到高。堆 是动态存储区，程序运行时分配 malloc new都是堆上操作</p>
-<h3 id="栈简介"><a href="#栈简介" class="headerlink" title="栈简介"></a>栈简介</h3><p>栈：由操作系统自动分配释放，用于存放函数的参数值、局部变量等。</p>
-<p>函数中定义的局部变量按照先后定义的顺序一次压入栈中。栈的内存地址生长方向由高到低，</p>
-<p>所以 后定义的变量地址低于先定义的变量</p>
-<h3 id="堆与栈的区别"><a href="#堆与栈的区别" class="headerlink" title="堆与栈的区别"></a>堆与栈的区别</h3><ul>
-<li><p>管理方式不同：栈由操作系统自动分配释放，无需手动控制；堆的申请和释放工作由程序员控制，容易产生内存泄漏。</p>
-</li>
-<li><p>空间大小不同：每个进程拥有的栈的大小远远小于堆的大小。理论上，程序员可以申请堆的大小为虚拟内存的大小。</p>
-</li>
-<li><p>生长方向不同：堆的生长方向 由低到高；栈的生长方向由高到低</p>
-</li>
-</ul>
-<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTcxMjIyMjI1OTU0NjA5?x-oss-process=image/format,png" alt="栈图"></p>
-<p> （<strong>EBP寄存器是用于访问堆栈中的数据的</strong>，它指向堆栈中间的某个位置（具体位置后文会具体讲解），<em>函数的参数地址比EBP的值高</em>，而<em>函数的局部变量地址比EBP的值低</em>，因此参数或局部变量总是通过EBP加减一定的偏移地址来访问的）</p>
-<ul>
-<li><p>分配方式不同：<strong>堆都是动态分配的，没有静态分配的堆</strong>。栈由两种分配方式：<strong>静态分配和动态分配。</strong></p>
-</li>
-<li><p><strong>静态分配</strong>是由操作系统完成，如 局部变量的分配。 <strong>动态分配</strong>是由 alloca函数进行分配，但是栈的动态分配是由操作系统进行释放，<strong>与堆不同</strong>。</p>
-</li>
-<li><p>存放内容不同：栈存放的内容，<em>函数返回地址、相关参数、局部变量和寄存器内容等</em>；堆中具体存放的内容是由<em>程序员来填充</em>的。</p>
-</li>
-<li><p>全局区：<strong>全局变量和静态变量的存储是放在一块的</strong>，初始化的全局变量和静态变量在一块区域，未初始化的全局变量和静态变量在相邻的另一块区域，程序结束后由系统释放</p>
-</li>
-<li><p>文字常量区：常量字符串放在这里，程序结束后由系统释放</p>
-</li>
-<li><p>程序代码区：存放函数体的二进制代码</p>
-</li>
-</ul>
-<p><span class="github-emoji"><span>🦅</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f985.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>  <span class="github-emoji"><span>🦁</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f981.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> </p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> spring基础 </tag>
+            
+            <tag> 注释、xml配置 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>springboot学习二</title>
+      <link href="2020/12/05/springboot-xue-xi-er/"/>
+      <url>2020/12/05/springboot-xue-xi-er/</url>
+      
+        <content type="html"><![CDATA[<h3 id="Spring注解-Resource和-Autowired区别对比"><a href="#Spring注解-Resource和-Autowired区别对比" class="headerlink" title="Spring注解@Resource和@Autowired区别对比"></a>Spring注解@Resource和@Autowired区别对比</h3><p>@Resource和@Autowired都是做bean的注入时使用，其实**@Resource并不是Spring的注解**，它的包是javax.annotation.Resource，需要导入，但是Spring支持该注解的注入。</p><p><strong>共同点</strong>：<br>两者都可以写在字段和setter方法上。两者如果都写在字段上，那么就不需要再写setter方法。</p><p><strong>不同点：</strong><br>@Autowired为Spring提供的注解，需要导入包org.springframework.beans.factory.annotation.Autowired;<strong>只按照byType注入。</strong></p><p><strong>@Autowired注解是按照类型（byType）</strong>装配依赖对象，默认情况下它要求依赖对象必须存在，如果允许null值，可以设置它的required属性为false。如果我们想使用按照名称（byName）来装配，可以结合@Qualifier注解一起使用</p><p><strong>@Resource默认按照ByName自动注入</strong>，由J2EE提供，需要导入包javax.annotation.Resource。@Resource有<strong>两个重要的属性：name和type</strong>，而Spring将@Resource注解的name属性解析为bean的名字，而type属性则解析为bean的类型。所以，如果使用name属性，则使用byName的自动注入策略，而使用type属性时则使用byType自动注入策略。</p><a id="more"></a><h3 id="spring注入Bean的几种方式"><a href="#spring注入Bean的几种方式" class="headerlink" title="spring注入Bean的几种方式"></a>spring注入Bean的几种方式</h3><ol><li>配置xml文件<code>    &lt;bean id="bean" class="beandemo.Bean" /&gt;</code><br>一个一个配太麻烦，可以通过一种注解实现注入的方法。只需要在你需要注入的类前面加上相应的注解，Spring就会帮助我们扫描到他们去实现注入。xml扫描包的方式<pre><code>`&lt;context:component-scan base-package="com.company.beandemo"/&gt;`</code></pre></li></ol><p>基于@Autowired的自动装配，默认是根据类型注入，可以用于构造器、字段、方法注入，使用方式如下：</p><p><strong>java代码：</strong></p><ol><li>@Autowired(required=<strong>true</strong>) </li><li>构造器、字段、方法 </li></ol><h5 id="通过构造方法注入Bean"><a href="#通过构造方法注入Bean" class="headerlink" title="通过构造方法注入Bean"></a>通过构造方法注入Bean</h5><p><strong>构造器注入：</strong>通过将@Autowired注解放在构造器上来完成构造器注入，默认构造器参数通过类型自动装配</p><ol><li><pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> cn<span class="token punctuation">.</span>javass<span class="token punctuation">.</span>spring<span class="token punctuation">.</span>chapter12<span class="token punctuation">;</span>  <span class="token keyword">import</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>beans<span class="token punctuation">.</span>factory<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>Autowired<span class="token punctuation">;</span>  <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestBean11</span> <span class="token punctuation">{</span>   <span class="token keyword">private</span> String message<span class="token punctuation">;</span>   <span class="token annotation punctuation">@Autowired</span> <span class="token comment" spellcheck="true">//构造器注入  </span> <span class="token keyword">private</span> <span class="token function">TestBean11</span><span class="token punctuation">(</span>String message<span class="token punctuation">)</span> <span class="token punctuation">{</span>       <span class="token keyword">this</span><span class="token punctuation">.</span>message <span class="token operator">=</span> message<span class="token punctuation">;</span>   <span class="token punctuation">}</span>   <span class="token comment" spellcheck="true">//省略message的getter和setter  </span><span class="token punctuation">}</span>  </code></pre></li><li><p>在Spring配置文件（chapter12/dependecyInjectWithAnnotation.xml）添加如下Bean配置：<br><code>&lt;bean id="testBean11" class="cn.javass.spring.chapter12.TestBean11"/&gt;  </code></p></li></ol><h5 id="通过set方法注入Bean"><a href="#通过set方法注入Bean" class="headerlink" title="通过set方法注入Bean"></a>通过set方法注入Bean</h5><p><strong>方法参数注入：</strong>通过将@Autowired注解放在方法上来完成方法参数注入。</p><pre class=" language-Java"><code class="language-Java">package&nbsp;cn.javass.spring.chapter12;&nbsp;&nbsp;import&nbsp;org.springframework.beans.factory.annotation.Autowired;&nbsp;&nbsp;public&nbsp;class&nbsp;TestBean13&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;String&nbsp;message;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Autowired&nbsp;//setter方法注入&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;setMessage(String&nbsp;message)&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.message&nbsp;=&nbsp;message;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;String&nbsp;getMessage()&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;message;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;}&nbsp;&nbsp;</code></pre><h5 id="通过属性-字段-注入Bean"><a href="#通过属性-字段-注入Bean" class="headerlink" title="通过属性(字段)注入Bean"></a>通过属性(字段)注入Bean</h5><p>1、准备测试Bean，在字段上添加@AutoWired注解：</p><pre class=" language-Java"><code class="language-Java">package&nbsp;cn.javass.spring.chapter12;&nbsp;&nbsp;import&nbsp;org.springframework.beans.factory.annotation.Autowired;&nbsp;&nbsp;public&nbsp;class&nbsp;TestBean12&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Autowired&nbsp;//字段注入&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;String&nbsp;message;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//省略getter和setter&nbsp;&nbsp;}&nbsp;</code></pre><p>2、在Spring配置文件（chapter12/dependecyInjectWithAnnotation.xml）添加如下Bean配置：<br><code>&lt;bean id="testBean12" class="cn.javass.spring.chapter12.TestBean12"/&gt;  </code>同上</p><h5 id="静态工厂注入"><a href="#静态工厂注入" class="headerlink" title="静态工厂注入"></a>静态工厂注入</h5><h3 id="shiro整合redis"><a href="#shiro整合redis" class="headerlink" title="shiro整合redis"></a>shiro整合redis</h3>]]></content>
+      
+      
       <categories>
-        <category>编程</category>
+          
+          <category> springboot学习 </category>
+          
       </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>基础知识</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2020/11/15/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<a id="more"></a>
-
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy</code></pre>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> shiro </tag>
+            
+            <tag> redis </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>springboot学习一</title>
+      <link href="2020/12/04/springboot-quan-ju-yi-chang-chu-li/"/>
+      <url>2020/12/04/springboot-quan-ju-yi-chang-chu-li/</url>
+      
+        <content type="html"><![CDATA[<h3 id="SpringBoot继承AbstractErrorController实现全局异常处理"><a href="#SpringBoot继承AbstractErrorController实现全局异常处理" class="headerlink" title="SpringBoot继承AbstractErrorController实现全局异常处理"></a>SpringBoot继承AbstractErrorController实现全局异常处理</h3><p>  项目中需要一个全局异常，防止未处理的异常信息直接暴露给前端（就是运行报错，错误栈直接在网页展示的情况），这影响用户的体验。</p><ul><li>SpringBoot中可以使用<strong>ControllerAdvice</strong>和<strong>ExceptionHandler</strong>这个两个注解来做全局异常（只能能处理Controller层之内的异常，对于渲染层及其他的异常是无能为力的。）<strong>ControllerAdvice</strong>定义统一的异常处理类，<strong>ExceptionHandler</strong>定义函数针对的异常类型，最后将Exception对象和请求URL映射到error.html中。<br><a href="http://blog.didispace.com/springbootexception/">学习相关内容连接</a></li><li>另一种是本文提到的方式</li></ul><a id="more"></a><p><strong>ControllerAdvice</strong>只能拦截 <strong>控制器</strong> 中的异常也就是500之类的异常，404这种不进入控制器处理的异常不起作用</p><p>原理：<br>        springboot会将所有的异常发送到路径为 server.error.path(application.properties中可配置，默认为”/error”)的控制器（Controller）方法中进行处理，页面请求和ajax请求会分别达到对应的处理方法上。<strong>有两个方法继承AbstractErrorController后要实现 一个是  errorHtml，另一个是 error方法。</strong> 构造函数要 显示 调用父类的构造函数并传入参数</p><pre class=" language-java"><code class="language-java">ExceptionEnum类是枚举类，枚举各种错误种类Result类返回错误信息的类，包含响应状态编码，响应信息等</code></pre><p>第一个方法<strong>errorHtml</strong>上标注了@RequestMapping(produces = MediaType.TEXT_HTML_VALUE)，因此当请求类型是text/html，也即是<strong>通过浏览器访问时进入该方法</strong>，<strong>其他客户端访问时</strong>当然就进入第二个方法了，所以大家会发现在浏览器和Postman访问同一个错误路径时返回的数据是不同了，浏览器返回html，而postman返回json数据(自定义的返回数据类)。</p><p><a href="https://blog.csdn.net/hello_IT_/article/details/106174121?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.not_use_machine_learn_pai&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.not_use_machine_learn_pai">本文方法的一些参考</a></p><p>本文处理流程原理：</p><ol><li><strong>ErrorPageCustomizer</strong>：系统出现错误后，来到 error 请求进行处理（类似 web.xml 注册的错误页面规则）</li><li><strong>BasicErrorController</strong>：处理默认/error请求</li><li><strong>DefaultErrorAttributes</strong>：通过getErrorAttributes获得异常的信息</li><li><strong>DefaultErrorViewResolver</strong>：返回错误页面（就是返回一个ModelAndView,可以自定义)</li></ol>]]></content>
+      
+      
       <categories>
-        <category>日常文章</category>
+          
+          <category> springboot学习 </category>
+          
       </categories>
-      <tags>
-        <tag>初学者</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>分辨实体类</title>
-    <url>/2020/12/02/fen-bian-shi-ti-lei/</url>
-    <content><![CDATA[<center style="font-size:25px;font-weight:bold">Bean的分辨</center>
-
-<h4 id="POJO-Plain-Old-Java-Object"><a href="#POJO-Plain-Old-Java-Object" class="headerlink" title="POJO(Plain Old Java Object)"></a>POJO(Plain Old Java Object)</h4><p>pojo是DO/DTO/BO/VO的统称，禁止命名成 xxxPOJO</p>
-<ul>
-<li>DO(Data Object):**与数据库表结构一一对应，通过DAO层向上传输数据源对象,**用来和单表一一对应的实体类。</li>
-<li>DTO（Data Transfer Object）：数据传输对象，Service或者Manager向外传输的对象，<strong>比如Controller的入参xxxReqDTO,Service层的出参 xxxRespDTO</strong></li>
-<li>BO（Businese Object):业务对象。由Service层输出的封装业务逻辑对象。</li>
-<li>AO（Application Object):应用对象。在Web层与Service层之间抽象的复用对象模型，极为贴近展示层，服务都不高</li>
-<li>VO（View Object):显示层对象，<strong>通常是Web向模板渲染引擎层传输的对象</strong></li>
-<li>POJO(Plain Ordinary Java Object):POJO专指只有setter/getter/toString的简单类，包括DO/DTO/BO/VO等</li>
-<li>PO(Persistant Object)可以看成是与数据库中的表相映射的java对象。比如PO对应数据表中的某一条记录，多个记录可以用PO的集合，PO应该不包含任何对数据库的操作。，由get/set/序列化组成。</li>
-<li>Query:数据查询对象，各层接受上层的查询请求。注意超过两个参数的查询封装，禁止使用Map类来传输。</li>
-</ul>
-<p><strong><img src="/.io//1736f3263e8988ba" alt="img"></strong></p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> springboot </tag>
+            
+            <tag> springboot内容学习 </tag>
+            
+            <tag> 异常处理 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>分辨实体类</title>
+      <link href="2020/12/02/fen-bian-shi-ti-lei/"/>
+      <url>2020/12/02/fen-bian-shi-ti-lei/</url>
+      
+        <content type="html"><![CDATA[<center style="font-size:25px;font-weight:bold">Bean的分辨</center><h4 id="POJO-Plain-Old-Java-Object"><a href="#POJO-Plain-Old-Java-Object" class="headerlink" title="POJO(Plain Old Java Object)"></a>POJO(Plain Old Java Object)</h4><p>pojo是DO/DTO/BO/VO的统称，禁止命名成 xxxPOJO</p><ul><li>DO(Data Object):**与数据库表结构一一对应，通过DAO层向上传输数据源对象,**用来和单表一一对应的实体类。</li><li>DTO（Data Transfer Object）：数据传输对象，Service或者Manager向外传输的对象，<strong>比如Controller的入参xxxReqDTO,Service层的出参 xxxRespDTO</strong></li><li>BO（Businese Object):业务对象。由Service层输出的封装业务逻辑对象。</li><li>AO（Application Object):应用对象。在Web层与Service层之间抽象的复用对象模型，极为贴近展示层，服务都不高</li><li>VO（View Object):显示层对象，<strong>通常是Web向模板渲染引擎层传输的对象</strong></li><li>POJO(Plain Ordinary Java Object):POJO专指只有setter/getter/toString的简单类，包括DO/DTO/BO/VO等</li><li>PO(Persistant Object)可以看成是与数据库中的表相映射的java对象。比如PO对应数据表中的某一条记录，多个记录可以用PO的集合，PO应该不包含任何对数据库的操作。，由get/set/序列化组成。</li><li>Query:数据查询对象，各层接受上层的查询请求。注意超过两个参数的查询封装，禁止使用Map类来传输。</li></ul><p><strong><img src="/.io//1736f3263e8988ba" alt="img"></strong></p>]]></content>
+      
+      
       <categories>
-        <category>Spring学习</category>
+          
+          <category> Spring学习 </category>
+          
       </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>Bean</tag>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>正则表达式</title>
-    <url>/2020/11/22/zheng-ze-biao-da-shi/</url>
-    <content><![CDATA[<h3 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h3><ol>
-<li>\b匹配一个位置（前一个或后一个字符不全是\w）单词开始处或结束出</li>
-<li>\d: 匹配数字</li>
-<li>\w:匹配<strong>字母</strong>或<strong>数字</strong>或<strong>下划线</strong>或<strong>汉字</strong></li>
-<li><em>: 元字符，指定 * *</em>前边的内容<strong>以可</strong>连续重复使用任意次**以使整个表达式得到匹配（可能0次）</li>
-<li>+：元字符，和* 类似，重复一次或更多次</li>
-<li>. (点):<u>匹配除了换行符以外的任意字符</u></li>
-<li>^： 匹配字符串的开始</li>
-<li>$: 匹配字符串的结束</li>
-<li>\s : 匹配任意的空白符（空格、制表符tab，换行符，中文全角空格）</li>
-<li>{number}代表重复{number}之前的内容number次</li>
-</ol>
-<a id="more"></a>
-
-<h3 id="重复"><a href="#重复" class="headerlink" title="重复"></a>重复</h3><ul>
-<li>*重复0次或更多次</li>
-<li>+ 重复一次或者更多次</li>
-<li>？ 重复0次或一次</li>
-<li>{n} 重复n次</li>
-<li>{n,}重复n次或者更多次</li>
-<li>{n,m} 重复n 到m次</li>
-</ul>
-<h3 id="字符类（匹配自己规定的字符范围）"><a href="#字符类（匹配自己规定的字符范围）" class="headerlink" title="字符类（匹配自己规定的字符范围）"></a>字符类（匹配自己规定的字符范围）</h3><p>匹配没有预定义元字符的字符集合（比如我想查找 元音字母 aeiou）</p>
-<p>可以用方括号 列出他们 如：[aeiou]  [.?!]<u>匹配标点符号</u><br>[0-9]  [a-z0-9A-Z]</p>
-<h3 id="分支条件（或者情况-）"><a href="#分支条件（或者情况-）" class="headerlink" title="分支条件（或者情况 |）"></a>分支条件（或者情况 |）</h3><p>如果<strong>满足其中任意一种规则</strong>都应该当成匹配，具体方法使用 <strong>|**把</strong>不同的规则**分开</p>
-<p>从左到右判断，如果满足了某个分支的话，就不会再去管其他的条件了。</p>
-<h3 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h3><p>字符后加 + * ?等都是重复单个字符，如何重复多个字符？ <strong>可以用小括号来指定<em>子表达式（分组）</em></strong>，然后就可以指定这个子表达式的重复次数了。</p>
-<blockquote>
-<p>(\d{1,3}.){3}\d{1,3}是一个简单的IP地址匹配表达式。要理解这个表达式，请按下列顺序分析它：\d{1,3}匹配1到3位的数字，(\d{1,3}.){3}匹配三位数字加上一个英文句号(这个整体也就是这个<strong>分组</strong>)重复3次，最后再加上一个一到三位的数字(\d{1,3})。</p>
-</blockquote>
-<h3 id="反义"><a href="#反义" class="headerlink" title="反义"></a>反义</h3><p>有时需要查找<strong>不属于</strong> 某个能简单定义的字符类的字符。比如 <strong>除数字意外的，其他任意字符</strong></p>
-<p>常用的反义代码：</p>
-<ul>
-<li>\W :匹配任意不是 <strong>字母、数字、汉字、下划线</strong>的字符</li>
-<li>\S: 匹配任意<strong>不是空白符</strong>的字符</li>
-<li>\D：匹配任意<strong>非数字</strong>的字符</li>
-<li>\B： 匹配<strong>不是单词开头或者结束</strong>的位置</li>
-<li>[^x] : 匹配<strong>除了x以外</strong>的任意字符</li>
-<li>[^aeiou] ：匹配<strong>除了aeiou这几个字母以外</strong> 的任意字符</li>
-</ul>
-<blockquote>
-<p>\S+匹配不包含空白符的字符串。</p>
-<p>&lt;a[^&gt;]+&gt;匹配用尖括号括起来的以a开头的字符串。</p>
-</blockquote>
-<h3 id="向后引用"><a href="#向后引用" class="headerlink" title="向后引用"></a>向后引用</h3><p><em>向后引用</em> 用于<strong><em>重复搜索_前面某个分组_匹配的文本</em></strong></p>
-<blockquote>
-<p>\b(\w+)\b\s+\1\b可以用来匹配_重复的单词_，像<em>go go</em>, 或者<em>kitty kitty</em>。这个表达式首先是*<strong>一个单词**<em>，也就是</em></strong>单词开始处和结束处之间的多于一个的字母或数字*<strong>(\b(\w+)\b)，这个单词会被捕获到编号为1的分组中，然后是**<em>1个或几个空白符</em></strong>(\s+)，最后是**<em>分组1中捕获的内容**</em>（也就是前面匹配的那个单词）(\1)。</p>
-</blockquote>
-<p>使用**<em>小括号**</em> 指定一个子表达式后，<strong>匹配这个子表达式的文本</strong>（分组捕获的内容）可以在表达式或者其他程序中作进一步的处理（如前面匹配后，后面利用前面匹配过得文本，通过组号访问并利用它重复匹配），每个分组会自动拥有一个<strong>组号</strong></p>
-<p>可以自己指定子表达式的 <strong>组名</strong>  语法： (?<word>\w+) 这样就可以把\w+的组名指定为Word了，就是将尖括号或者单引号中的单词定义未组名</word></p>
-<blockquote>
-<table>
-<thead>
-<tr>
-<th>(exp)</th>
-<th>匹配exp,并捕获文本到自动命名的组里</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>(?<name>exp)</name></td>
-<td>匹配exp,并捕获文本到名称为name的组里，也可以写成(?’name’exp)</td>
-</tr>
-<tr>
-<td>(?:exp)</td>
-<td>匹配exp,不捕获匹配的文本，也不给此分组分配组号</td>
-</tr>
-</tbody></table>
-</blockquote>
-<h3 id="零宽断言-（断言：用来声明一个应该为真的事实。）"><a href="#零宽断言-（断言：用来声明一个应该为真的事实。）" class="headerlink" title="零宽断言 （断言：用来声明一个应该为真的事实。）"></a>零宽断言 （断言：用来声明一个应该为真的事实。）</h3><p>以后继续。。。。。</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> Bean </tag>
+            
+            <tag> Spring </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Learning Redis</title>
+      <link href="2020/12/01/learning-redis/"/>
+      <url>2020/12/01/learning-redis/</url>
+      
+        <content type="html"><![CDATA[<center style="font-weight:bold;font-size:25px">Redis/MySQL</center><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>NoSQL, NOt only SQL, 高并发、海量数据存储解决方案。Redis、MongoDB等内存数据库。</p><p>Redis是完全开源的，用ANSI C编写的一个高性能的key-value数据库。</p><p>三个特点：</p><ul><li>Redis支持数据的持久化，可以将内存中的数据存储到硬盘上，重启时可以使用。</li><li>Redis支持 list,set,zset,hash等数据结构。</li><li>Redis支持数据的备份，即<strong>master-slave模式的数据备份</strong>(不懂)</li><li>速度快、支持语言多、持久化、多种数据结构、主从复制以及高可用与分布式。</li></ul><p><escape><a id="more"></a><escape></escape></escape></p><h3 id="Redis的安装和使用"><a href="#Redis的安装和使用" class="headerlink" title="Redis的安装和使用"></a>Redis的安装和使用</h3><h5 id="Windows下安装："><a href="#Windows下安装：" class="headerlink" title="Windows下安装："></a>Windows下安装：</h5><p>下载地址：<a href="https://github.com/tporadowski/redis/releases">Redis下载链接</a></p><h5 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h5><p>常规：进入redis安装目录，运行一下命令</p><blockquote><p>redis-server.exe redis.windows.conf    <strong>开启redis服务端</strong></p><p>redis-cli.exe -h 127.0.0.1 -p 6379 <strong>连接redis服务器并使用</strong></p></blockquote><p>如果出现  **# Creating Server TCP listening socket 127.0.0.1:6379: bind: No error ** 错误</p><p>则在命令行中运行</p><blockquote><p>redis-cli.exe<br>shutdown<br>exit</p></blockquote><p>配置文件中可以修改 Redis的连接密码   <strong>requirepass</strong> 字段  后面可以修改，修改密码要重启</p><blockquote><p>service redis restart</p></blockquote><blockquote><p>redis-cli.exe -h 127.0.0.1 -p 6379 -a  [password]</p><p>或者 登录时不指定密码    进入redis命令行后 运行 auth [password]</p></blockquote><h5 id="Redis数据类型"><a href="#Redis数据类型" class="headerlink" title="Redis数据类型"></a>Redis数据类型</h5><p><strong>string</strong>是redis最基本的类型，二进制安全，redis的string可以包含任何数据，比如jpg图片或者序列化的对象，最大能存储512MB。使用场景：缓存、秒杀、分布式锁、配置中心、对象序列化</p><p><strong>Hash</strong> 键值对集合，一个string类型的field 和value的映射标，特别适用于存储对象。 <strong><em>HMSET key member(key value)</em></strong>   Map类型</p><p><strong>List列表</strong> 简单的字符串列表，按照插入顺序排序。可以在头部或者尾部插入。lpush rpush lrange，可以存储2的32次方-1个元素。 消息队列、最新消息排行榜</p><p><strong>Set(集合)</strong> string类型的无序集合，通过hash标实现的，<del>添加，删除，查找的复杂度都是O（1）</del>**<em>sadd key member**</em>    共同好友，交集</p><p><strong>zset(有序集合）</strong> string类型元素的集合，不允许重复的成员。但每个元素都会关联一个double类型的分数，redis通过这个分数为集合中的成员从小到大排序 <strong><em>zadd key score member</em></strong>  排行榜，带权重的消息队列</p><h5 id="Redis数据库"><a href="#Redis数据库" class="headerlink" title="Redis数据库"></a>Redis数据库</h5><p>Redis支持多个数据库，每个数据库的数据是隔离的不能共享（单机）<br>Redis 默认支持16个数据库，配置文件(redis.windows.conf 的databases值 或者redis.conf(linux))可以支持更多，没有上限，可以用 select命令来更换数据库。默认连接0号数据库</p><p>以上都是基于单机redis的情况。集群情况下只有一个db0，不能使用select命令来切换数据库。</p><h5 id="Redis-keys命令"><a href="#Redis-keys命令" class="headerlink" title="Redis keys命令"></a>Redis keys命令</h5><table><thead><tr><th><center>命令及描述</center></th></tr></thead><tbody><tr><td>del key 删除Key</td></tr><tr><td>dump key 序列化给定Key，并给定序列化的值</td></tr><tr><td>exists key  是否存在key</td></tr><tr><td>expire key seconds  key 设置过期时间</td></tr><tr><td>keys pattern 查找符合给定模式pattern的key</td></tr><tr><td>type key 返回key所存储的值的类型</td></tr><tr><td>rename key newkey  修改Key的名称</td></tr></tbody></table><table><thead><tr><th>redis常用字符串命令 string相关</th></tr></thead><tbody><tr><td>set key value</td></tr><tr><td>get key</td></tr><tr><td>getrange key start end key中字符串的子字符串</td></tr><tr><td>incr key 将Key中存储的数字值加一</td></tr></tbody></table><h5 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h5><ul><li>数据缓存（页面具体数据），页面缓存（商品内容，新闻内容）</li><li>分布式级群中架构的Session分离</li><li>应用排行榜，在线好友列表</li><li>任务队列，如抢购秒杀等。</li></ul><p>Redis在Java中的使用我将写成小demo上传到github上，后续补充链接。。。。</p><h3 id="MySQL的安装和使用"><a href="#MySQL的安装和使用" class="headerlink" title="MySQL的安装和使用"></a>MySQL的安装和使用</h3><p>MySQL的安装、使用步骤。（备忘）</p><h5 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h5><p>待补充。。。。。</p><h5 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h5><p>以下是安装5.7版本步骤</p><ol><li><p>运行以下命令更新YUM源。</p><pre><code>rpm -Uvh  http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm</code></pre></li><li><p>运行以下命令安装MySQL。</p><pre><code>yum -y install mysql-community-server</code></pre></li><li><p>运行以下命令查看MySQL版本号。</p><pre><code>mysql -V</code></pre><p>返回结果如下，表示MySQL安装成功。</p><pre><code>mysql  Ver 14.14 Distrib 5.7.31, for Linux (x86_64) using  EditLine wrapper</code></pre></li></ol><p>还有各种配置、安装版本不同等情况参考以下链接：</p><p><a href="https://help.aliyun.com/document_detail/116727.html?spm=a2c4g.11186623.6.1248.67a43c9dpU9UUr#title-np4-hic-947">阿里云手动部署MySQL数据库</a></p><p><a href="https://juejin.cn/post/6844903870053761037#heading-24">掘金CentOS安装MySQL详解</a></p>]]></content>
+      
+      
       <categories>
-        <category>编程</category>
+          
+          <category> 学习记录 </category>
+          
       </categories>
-      <tags>
-        <tag>正则表达式</tag>
-        <tag>模式识别</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>测试自动打开markdown</title>
-    <url>/2020/11/16/ce-shi-zi-dong-da-kai-markdown/</url>
-    <content><![CDATA[<p>哈哈，马勒戈壁的，真的能用</p>
-<p>还可以，要不要试试about页面展示呢？</p>
-]]></content>
-      <tags>
-        <tag>爱好</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>终于完成</title>
-    <url>/2020/11/15/zhong-yu-wan-cheng/</url>
-    <content><![CDATA[<p>卧槽能不能用啊</p>
-<h2 id="测试一下，好不好用啊"><a href="#测试一下，好不好用啊" class="headerlink" title="测试一下，好不好用啊"></a>测试一下，好不好用啊</h2><h1 id="真的好用吗"><a href="#真的好用吗" class="headerlink" title="真的好用吗"></a>真的好用吗</h1>]]></content>
-  </entry>
-  <entry>
-    <title>Java基础(1)</title>
-    <url>/2020/12/08/java-ji-chu-1/</url>
-    <content><![CDATA[<p>待写</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> 学习 </tag>
+            
+            <tag> Redis </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>正则表达式</title>
+      <link href="2020/11/22/zheng-ze-biao-da-shi/"/>
+      <url>2020/11/22/zheng-ze-biao-da-shi/</url>
+      
+        <content type="html"><![CDATA[<h3 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h3><ol><li>\b匹配一个位置（前一个或后一个字符不全是\w）单词开始处或结束出</li><li>\d: 匹配数字</li><li>\w:匹配<strong>字母</strong>或<strong>数字</strong>或<strong>下划线</strong>或<strong>汉字</strong></li><li><em>: 元字符，指定 * *</em>前边的内容<strong>以可</strong>连续重复使用任意次**以使整个表达式得到匹配（可能0次）</li><li>+：元字符，和* 类似，重复一次或更多次</li><li>. (点):<u>匹配除了换行符以外的任意字符</u></li><li>^： 匹配字符串的开始</li><li>$: 匹配字符串的结束</li><li>\s : 匹配任意的空白符（空格、制表符tab，换行符，中文全角空格）</li><li>{number}代表重复{number}之前的内容number次</li></ol><a id="more"></a><h3 id="重复"><a href="#重复" class="headerlink" title="重复"></a>重复</h3><ul><li>*重复0次或更多次</li><li>+ 重复一次或者更多次</li><li>？ 重复0次或一次</li><li>{n} 重复n次</li><li>{n,}重复n次或者更多次</li><li>{n,m} 重复n 到m次</li></ul><h3 id="字符类（匹配自己规定的字符范围）"><a href="#字符类（匹配自己规定的字符范围）" class="headerlink" title="字符类（匹配自己规定的字符范围）"></a>字符类（匹配自己规定的字符范围）</h3><p>匹配没有预定义元字符的字符集合（比如我想查找 元音字母 aeiou）</p><p>可以用方括号 列出他们 如：[aeiou]  [.?!]<u>匹配标点符号</u><br>[0-9]  [a-z0-9A-Z]</p><h3 id="分支条件（或者情况-）"><a href="#分支条件（或者情况-）" class="headerlink" title="分支条件（或者情况 |）"></a>分支条件（或者情况 |）</h3><p>如果<strong>满足其中任意一种规则</strong>都应该当成匹配，具体方法使用 <strong>|**把</strong>不同的规则**分开</p><p>从左到右判断，如果满足了某个分支的话，就不会再去管其他的条件了。</p><h3 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h3><p>字符后加 + * ?等都是重复单个字符，如何重复多个字符？ <strong>可以用小括号来指定<em>子表达式（分组）</em></strong>，然后就可以指定这个子表达式的重复次数了。</p><blockquote><p>(\d{1,3}.){3}\d{1,3}是一个简单的IP地址匹配表达式。要理解这个表达式，请按下列顺序分析它：\d{1,3}匹配1到3位的数字，(\d{1,3}.){3}匹配三位数字加上一个英文句号(这个整体也就是这个<strong>分组</strong>)重复3次，最后再加上一个一到三位的数字(\d{1,3})。</p></blockquote><h3 id="反义"><a href="#反义" class="headerlink" title="反义"></a>反义</h3><p>有时需要查找<strong>不属于</strong> 某个能简单定义的字符类的字符。比如 <strong>除数字意外的，其他任意字符</strong></p><p>常用的反义代码：</p><ul><li>\W :匹配任意不是 <strong>字母、数字、汉字、下划线</strong>的字符</li><li>\S: 匹配任意<strong>不是空白符</strong>的字符</li><li>\D：匹配任意<strong>非数字</strong>的字符</li><li>\B： 匹配<strong>不是单词开头或者结束</strong>的位置</li><li>[^x] : 匹配<strong>除了x以外</strong>的任意字符</li><li>[^aeiou] ：匹配<strong>除了aeiou这几个字母以外</strong> 的任意字符</li></ul><blockquote><p>\S+匹配不包含空白符的字符串。</p><p>&lt;a[^&gt;]+&gt;匹配用尖括号括起来的以a开头的字符串。</p></blockquote><h3 id="向后引用"><a href="#向后引用" class="headerlink" title="向后引用"></a>向后引用</h3><p><em>向后引用</em> 用于<strong><em>重复搜索_前面某个分组_匹配的文本</em></strong></p><blockquote><p>\b(\w+)\b\s+\1\b可以用来匹配_重复的单词_，像<em>go go</em>, 或者<em>kitty kitty</em>。这个表达式首先是*<strong>一个单词**<em>，也就是</em></strong>单词开始处和结束处之间的多于一个的字母或数字*<strong>(\b(\w+)\b)，这个单词会被捕获到编号为1的分组中，然后是**<em>1个或几个空白符</em></strong>(\s+)，最后是**<em>分组1中捕获的内容**</em>（也就是前面匹配的那个单词）(\1)。</p></blockquote><p>使用**<em>小括号**</em> 指定一个子表达式后，<strong>匹配这个子表达式的文本</strong>（分组捕获的内容）可以在表达式或者其他程序中作进一步的处理（如前面匹配后，后面利用前面匹配过得文本，通过组号访问并利用它重复匹配），每个分组会自动拥有一个<strong>组号</strong></p><p>可以自己指定子表达式的 <strong>组名</strong>  语法： (?<word>\w+) 这样就可以把\w+的组名指定为Word了，就是将尖括号或者单引号中的单词定义未组名</word></p><blockquote><table><thead><tr><th>(exp)</th><th>匹配exp,并捕获文本到自动命名的组里</th></tr></thead><tbody><tr><td>(?<name>exp)</name></td><td>匹配exp,并捕获文本到名称为name的组里，也可以写成(?’name’exp)</td></tr><tr><td>(?:exp)</td><td>匹配exp,不捕获匹配的文本，也不给此分组分配组号</td></tr></tbody></table></blockquote><h3 id="零宽断言-（断言：用来声明一个应该为真的事实。）"><a href="#零宽断言-（断言：用来声明一个应该为真的事实。）" class="headerlink" title="零宽断言 （断言：用来声明一个应该为真的事实。）"></a>零宽断言 （断言：用来声明一个应该为真的事实。）</h3><p>以后继续。。。。。</p>]]></content>
+      
+      
       <categories>
-        <category>Java基础学习</category>
+          
+          <category> 编程 </category>
+          
       </categories>
-      <tags>
-        <tag>Java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>springboot学习一</title>
-    <url>/2020/12/04/springboot-quan-ju-yi-chang-chu-li/</url>
-    <content><![CDATA[<h3 id="SpringBoot继承AbstractErrorController实现全局异常处理"><a href="#SpringBoot继承AbstractErrorController实现全局异常处理" class="headerlink" title="SpringBoot继承AbstractErrorController实现全局异常处理"></a>SpringBoot继承AbstractErrorController实现全局异常处理</h3><p>  项目中需要一个全局异常，防止未处理的异常信息直接暴露给前端（就是运行报错，错误栈直接在网页展示的情况），这影响用户的体验。</p>
-<ul>
-<li>SpringBoot中可以使用<strong>ControllerAdvice</strong>和<strong>ExceptionHandler</strong>这个两个注解来做全局异常（只能能处理Controller层之内的异常，对于渲染层及其他的异常是无能为力的。）<strong>ControllerAdvice</strong>定义统一的异常处理类，<strong>ExceptionHandler</strong>定义函数针对的异常类型，最后将Exception对象和请求URL映射到error.html中。<br><a href="http://blog.didispace.com/springbootexception/">学习相关内容连接</a></li>
-<li>另一种是本文提到的方式</li>
-</ul>
-<a id="more"></a>
-
-<p><strong>ControllerAdvice</strong>只能拦截 <strong>控制器</strong> 中的异常也就是500之类的异常，404这种不进入控制器处理的异常不起作用</p>
-<p>原理：<br>        springboot会将所有的异常发送到路径为 server.error.path(application.properties中可配置，默认为”/error”)的控制器（Controller）方法中进行处理，页面请求和ajax请求会分别达到对应的处理方法上。<strong>有两个方法继承AbstractErrorController后要实现 一个是  errorHtml，另一个是 error方法。</strong> 构造函数要 显示 调用父类的构造函数并传入参数</p>
-<pre class=" language-java"><code class="language-java">ExceptionEnum类是枚举类，枚举各种错误种类
-Result类返回错误信息的类，包含响应状态编码，响应信息等</code></pre>
-<p>第一个方法<strong>errorHtml</strong>上标注了@RequestMapping(produces = MediaType.TEXT_HTML_VALUE)，因此当请求类型是text/html，也即是<strong>通过浏览器访问时进入该方法</strong>，<strong>其他客户端访问时</strong>当然就进入第二个方法了，所以大家会发现在浏览器和Postman访问同一个错误路径时返回的数据是不同了，浏览器返回html，而postman返回json数据(自定义的返回数据类)。</p>
-<p><a href="https://blog.csdn.net/hello_IT_/article/details/106174121?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.not_use_machine_learn_pai&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.not_use_machine_learn_pai">本文方法的一些参考</a></p>
-<p>本文处理流程原理：</p>
-<ol>
-<li><strong>ErrorPageCustomizer</strong>：系统出现错误后，来到 error 请求进行处理（类似 web.xml 注册的错误页面规则）</li>
-<li><strong>BasicErrorController</strong>：处理默认/error请求</li>
-<li><strong>DefaultErrorAttributes</strong>：通过getErrorAttributes获得异常的信息</li>
-<li><strong>DefaultErrorViewResolver</strong>：返回错误页面（就是返回一个ModelAndView,可以自定义)</li>
-</ol>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> 正则表达式 </tag>
+            
+            <tag> 模式识别 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>c/c++堆栈.md</title>
+      <link href="2020/11/19/c-c-dui-zhan-md/"/>
+      <url>2020/11/19/c-c-dui-zhan-md/</url>
+      
+        <content type="html"><![CDATA[<h3 id="C-创建对象："><a href="#C-创建对象：" class="headerlink" title="C++创建对象："></a>C++创建对象：</h3><ol><li><p><code>Object obj;</code>实例化方法 在栈中分配内存  </p></li><li><p><code>Object* object =new Object();</code>动态分配内存</p></li></ol><h3 id="new和malloc的区别"><a href="#new和malloc的区别" class="headerlink" title="new和malloc的区别"></a>new和malloc的区别</h3><blockquote><p>new必须delete删除 不用new系统会自动回收</p></blockquote><blockquote><p>new 建造一个有对象，并调用对象的构造函数初始化对象：第一步申请内存，第二步调用构造函数初始化对象，第三步返回指针所指向对象的类型和地址</p></blockquote><blockquote><p>delete：首先调用析构函数，然后销毁堆内存</p></blockquote><blockquote><p>对于非内部数据类型的对象而言，仅用malloc/free无法满足动态对象的要求。</p></blockquote><blockquote><p>free对象无法执行析构函数</p></blockquote><blockquote><p>new能够按照变量类型自动地分配所需空间长度，不必使用宏sizeof</p></blockquote><blockquote><p>new 能够返回正确的指针类型</p></blockquote><blockquote><p>new创建对象数组，只能使用对象的无参数构造函数</p></blockquote><blockquote><p>malloc函数本身并不识别要申请的内存是什么类型，只关心内存的总字节数</p></blockquote><a id="more"></a><h3 id="堆简介"><a href="#堆简介" class="headerlink" title="堆简介"></a>堆简介</h3><p>堆由开发人员分配和释放，若开发人员不释放，程序结束时由OS回收，堆内存的生长方向是</p><p>由低到高。堆 是动态存储区，程序运行时分配 malloc new都是堆上操作</p><h3 id="栈简介"><a href="#栈简介" class="headerlink" title="栈简介"></a>栈简介</h3><p>栈：由操作系统自动分配释放，用于存放函数的参数值、局部变量等。</p><p>函数中定义的局部变量按照先后定义的顺序一次压入栈中。栈的内存地址生长方向由高到低，</p><p>所以 后定义的变量地址低于先定义的变量</p><h3 id="堆与栈的区别"><a href="#堆与栈的区别" class="headerlink" title="堆与栈的区别"></a>堆与栈的区别</h3><ul><li><p>管理方式不同：栈由操作系统自动分配释放，无需手动控制；堆的申请和释放工作由程序员控制，容易产生内存泄漏。</p></li><li><p>空间大小不同：每个进程拥有的栈的大小远远小于堆的大小。理论上，程序员可以申请堆的大小为虚拟内存的大小。</p></li><li><p>生长方向不同：堆的生长方向 由低到高；栈的生长方向由高到低</p></li></ul><p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTcxMjIyMjI1OTU0NjA5?x-oss-process=image/format,png" alt="栈图"></p><p> （<strong>EBP寄存器是用于访问堆栈中的数据的</strong>，它指向堆栈中间的某个位置（具体位置后文会具体讲解），<em>函数的参数地址比EBP的值高</em>，而<em>函数的局部变量地址比EBP的值低</em>，因此参数或局部变量总是通过EBP加减一定的偏移地址来访问的）</p><ul><li><p>分配方式不同：<strong>堆都是动态分配的，没有静态分配的堆</strong>。栈由两种分配方式：<strong>静态分配和动态分配。</strong></p></li><li><p><strong>静态分配</strong>是由操作系统完成，如 局部变量的分配。 <strong>动态分配</strong>是由 alloca函数进行分配，但是栈的动态分配是由操作系统进行释放，<strong>与堆不同</strong>。</p></li><li><p>存放内容不同：栈存放的内容，<em>函数返回地址、相关参数、局部变量和寄存器内容等</em>；堆中具体存放的内容是由<em>程序员来填充</em>的。</p></li><li><p>全局区：<strong>全局变量和静态变量的存储是放在一块的</strong>，初始化的全局变量和静态变量在一块区域，未初始化的全局变量和静态变量在相邻的另一块区域，程序结束后由系统释放</p></li><li><p>文字常量区：常量字符串放在这里，程序结束后由系统释放</p></li><li><p>程序代码区：存放函数体的二进制代码</p></li></ul><p><span class="github-emoji"><span>🦅</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f985.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>  <span class="github-emoji"><span>🦁</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f981.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span> </p>]]></content>
+      
+      
       <categories>
-        <category>springboot学习</category>
+          
+          <category> 编程 </category>
+          
       </categories>
-      <tags>
-        <tag>springboot</tag>
-        <tag>springboot内容学习</tag>
-        <tag>异常处理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>springboot学习二</title>
-    <url>/2020/12/05/springboot-xue-xi-er/</url>
-    <content><![CDATA[<h3 id="Spring注解-Resource和-Autowired区别对比"><a href="#Spring注解-Resource和-Autowired区别对比" class="headerlink" title="Spring注解@Resource和@Autowired区别对比"></a>Spring注解@Resource和@Autowired区别对比</h3><p>@Resource和@Autowired都是做bean的注入时使用，其实**@Resource并不是Spring的注解**，它的包是javax.annotation.Resource，需要导入，但是Spring支持该注解的注入。</p>
-<p><strong>共同点</strong>：<br>两者都可以写在字段和setter方法上。两者如果都写在字段上，那么就不需要再写setter方法。</p>
-<p><strong>不同点：</strong><br>@Autowired为Spring提供的注解，需要导入包org.springframework.beans.factory.annotation.Autowired;<strong>只按照byType注入。</strong></p>
-<p><strong>@Autowired注解是按照类型（byType）</strong>装配依赖对象，默认情况下它要求依赖对象必须存在，如果允许null值，可以设置它的required属性为false。如果我们想使用按照名称（byName）来装配，可以结合@Qualifier注解一起使用</p>
-<p><strong>@Resource默认按照ByName自动注入</strong>，由J2EE提供，需要导入包javax.annotation.Resource。@Resource有<strong>两个重要的属性：name和type</strong>，而Spring将@Resource注解的name属性解析为bean的名字，而type属性则解析为bean的类型。所以，如果使用name属性，则使用byName的自动注入策略，而使用type属性时则使用byType自动注入策略。</p>
-<a id="more"></a>
-
-<h3 id="spring注入Bean的几种方式"><a href="#spring注入Bean的几种方式" class="headerlink" title="spring注入Bean的几种方式"></a>spring注入Bean的几种方式</h3><ol>
-<li>配置xml文件<code>    &lt;bean id="bean" class="beandemo.Bean" /&gt;</code><br>一个一个配太麻烦，可以通过一种注解实现注入的方法。只需要在你需要注入的类前面加上相应的注解，Spring就会帮助我们扫描到他们去实现注入。xml扫描包的方式<pre><code>`&lt;context:component-scan base-package="com.company.beandemo"/&gt;`</code></pre>
-</li>
-</ol>
-<p>基于@Autowired的自动装配，默认是根据类型注入，可以用于构造器、字段、方法注入，使用方式如下：</p>
-<p><strong>java代码：</strong></p>
-<ol>
-<li>@Autowired(required=<strong>true</strong>) </li>
-<li>构造器、字段、方法 </li>
-</ol>
-<h5 id="通过构造方法注入Bean"><a href="#通过构造方法注入Bean" class="headerlink" title="通过构造方法注入Bean"></a>通过构造方法注入Bean</h5><p><strong>构造器注入：</strong>通过将@Autowired注解放在构造器上来完成构造器注入，默认构造器参数通过类型自动装配</p>
-<ol>
-<li><pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> cn<span class="token punctuation">.</span>javass<span class="token punctuation">.</span>spring<span class="token punctuation">.</span>chapter12<span class="token punctuation">;</span>  
-<span class="token keyword">import</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>beans<span class="token punctuation">.</span>factory<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>Autowired<span class="token punctuation">;</span>  
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestBean11</span> <span class="token punctuation">{</span>  
- <span class="token keyword">private</span> String message<span class="token punctuation">;</span>  
- <span class="token annotation punctuation">@Autowired</span> <span class="token comment" spellcheck="true">//构造器注入  </span>
- <span class="token keyword">private</span> <span class="token function">TestBean11</span><span class="token punctuation">(</span>String message<span class="token punctuation">)</span> <span class="token punctuation">{</span>  
-     <span class="token keyword">this</span><span class="token punctuation">.</span>message <span class="token operator">=</span> message<span class="token punctuation">;</span>  
- <span class="token punctuation">}</span>  
- <span class="token comment" spellcheck="true">//省略message的getter和setter  </span>
-<span class="token punctuation">}</span>  </code></pre>
-</li>
-<li><p>在Spring配置文件（chapter12/dependecyInjectWithAnnotation.xml）添加如下Bean配置：<br><code>&lt;bean id="testBean11" class="cn.javass.spring.chapter12.TestBean11"/&gt;  </code></p>
-</li>
-</ol>
-<h5 id="通过set方法注入Bean"><a href="#通过set方法注入Bean" class="headerlink" title="通过set方法注入Bean"></a>通过set方法注入Bean</h5><p><strong>方法参数注入：</strong>通过将@Autowired注解放在方法上来完成方法参数注入。</p>
-<pre class=" language-Java"><code class="language-Java">package&nbsp;cn.javass.spring.chapter12;&nbsp;&nbsp;
-import&nbsp;org.springframework.beans.factory.annotation.Autowired;&nbsp;&nbsp;
-public&nbsp;class&nbsp;TestBean13&nbsp;{&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;String&nbsp;message;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;@Autowired&nbsp;//setter方法注入&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;setMessage(String&nbsp;message)&nbsp;{&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.message&nbsp;=&nbsp;message;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;String&nbsp;getMessage()&nbsp;{&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;message;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;
-}&nbsp;&nbsp;</code></pre>
-<h5 id="通过属性-字段-注入Bean"><a href="#通过属性-字段-注入Bean" class="headerlink" title="通过属性(字段)注入Bean"></a>通过属性(字段)注入Bean</h5><p>1、准备测试Bean，在字段上添加@AutoWired注解：</p>
-<pre class=" language-Java"><code class="language-Java">package&nbsp;cn.javass.spring.chapter12;&nbsp;&nbsp;
-import&nbsp;org.springframework.beans.factory.annotation.Autowired;&nbsp;&nbsp;
-public&nbsp;class&nbsp;TestBean12&nbsp;{&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;@Autowired&nbsp;//字段注入&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;String&nbsp;message;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;//省略getter和setter&nbsp;&nbsp;
-}&nbsp;</code></pre>
-<p>2、在Spring配置文件（chapter12/dependecyInjectWithAnnotation.xml）添加如下Bean配置：<br><code>&lt;bean id="testBean12" class="cn.javass.spring.chapter12.TestBean12"/&gt;  </code>同上</p>
-<h5 id="静态工厂注入"><a href="#静态工厂注入" class="headerlink" title="静态工厂注入"></a>静态工厂注入</h5><h3 id="shiro整合redis"><a href="#shiro整合redis" class="headerlink" title="shiro整合redis"></a>shiro整合redis</h3>]]></content>
+      
+      
+        <tags>
+            
+            <tag> C/C++ </tag>
+            
+            <tag> 基础知识 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="2020/11/15/hello-world/"/>
+      <url>2020/11/15/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><a id="more"></a><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
       <categories>
-        <category>springboot学习</category>
+          
+          <category> 日常文章 </category>
+          
       </categories>
-      <tags>
-        <tag>shiro</tag>
-        <tag>redis</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>spring注释/xml配置开发区别</title>
-    <url>/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/</url>
-    <content><![CDATA[<hr>
-<p><strong>XML开发方式</strong>（XML配置繁琐）</p>
-<p><strong>Spring注解方式（有助于学习SpringBoot）</strong></p>
-<hr>
-<p>主要内容：</p>
-<ul>
-<li>IOC与DI</li>
-<li>Spring的3种编程风格与2种注入方式</li>
-<li>1️⃣XML配置开发：<bean>描述依赖关系</bean></li>
-<li>自动装配：让<bean>职责单一化</bean></li>
-<li>2️⃣XML+注解：XML+<a href="context:component-scan">context:component-scan</a>+@Component()</li>
-<li>@Autowired的小秘密</li>
-<li>2️⃣JavaConfig+注解：@Configuration+@ComponentScan+@Component</li>
-<li>3️⃣JavaConfig方式：@Configuration+@Bean</li>
-<li>大乱斗：@ImportResource、@Component、@Bean</li>
-<li><a href="https://zhuanlan.zhihu.com/p/72668451">主要参考内容</a></li>
-<li><a href="https://www.cnblogs.com/shz365/p/5088289.html">配合参考内容</a></li>
-</ul>
-<hr>
-<a id="more"></a>
-
-<h3 id="Spring-IOC"><a href="#Spring-IOC" class="headerlink" title="Spring IOC"></a>Spring IOC</h3><p>不妨将IOC理解成一种思想，而DI是实现该思想的一种具体方式。Spring被称为IOC容器</p>
-<p><img src="/.io//image-20201207220242109.png" alt="Spring IOC"></p>
-<h3 id="Spring依赖注入的做法"><a href="#Spring依赖注入的做法" class="headerlink" title="Spring依赖注入的做法"></a>Spring依赖注入的做法</h3><p>通过配置信息（XML）来描述类与类之间的关系，然后通过IOC容器（Spring Context）去解析配置信息。</p>
-<pre class=" language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!-- 配置信息：在XML中定义Bean --></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.annotation.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-    <span class="token comment" spellcheck="true">&lt;!--ref是参照的意思，在代码中表示person类中有该成员变量，依赖关系的表现--></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">ref</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.annotation.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span></code></pre>
-<p>总结：</p>
-<ul>
-<li>配置信息用来描述类与类之间的关系（XML/注解/Configuration配置类都可以）</li>
-<li>对象之间的依赖关系必须在类中定义好（依赖的成员作为成员变量，和配置中匹配）</li>
-<li>Spring通过配置信息，用构造方法或者setter方法完成依赖注入</li>
-</ul>
-<h5 id="3种变成风格和两种注入方式"><a href="#3种变成风格和两种注入方式" class="headerlink" title="3种变成风格和两种注入方式"></a>3种变成风格和两种注入方式</h5><p>将Bean交给Spring管理的3种方式：</p>
-<ul>
-<li>XML配置</li>
-<li>注解</li>
-<li>@Configuration配置类</li>
-</ul>
-<p>注入方式：</p>
-<ul>
-<li>构造方法注入</li>
-<li>setter方法注入</li>
-</ul>
-<p><img src="/.io//image-20201207221157075.png" alt="重点在下面"></p>
-<h5 id="setter方法注入"><a href="#setter方法注入" class="headerlink" title="setter方法注入"></a>setter方法注入</h5><p>pom.xml</p>
-<pre class=" language-xml"><code class="language-xml"> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-context<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>4.3.12.RELEASE<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">></span></span></code></pre>
-<p>配置信息（setter方法注入）</p>
-<pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-
-    <span class="token comment" spellcheck="true">&lt;!-- 在xml中描述类与类的配置信息 --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-        <span class="token comment" spellcheck="true">&lt;!-- property标签表示，让Spring通过setter方法注入--></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">ref</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
-&lt;/bean</code></pre>
-<p>Person类</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Person</span> <span class="token punctuation">{</span>
-    <span class="token comment" spellcheck="true">// Person依赖Car</span>
-    <span class="token keyword">private</span> Car car<span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">// 无参构造</span>
-    <span class="token keyword">public</span> <span class="token function">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
-    <span class="token comment" spellcheck="true">// 有参构造</span>
-    <span class="token keyword">public</span> <span class="token function">Person</span><span class="token punctuation">(</span>Car car<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>car <span class="token operator">=</span> car<span class="token punctuation">;</span>
-        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"通过构造方法注入..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token comment" spellcheck="true">// setter方法</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setCar</span><span class="token punctuation">(</span>Car car<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>car <span class="token operator">=</span> car<span class="token punctuation">;</span>
-        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"通过setter方法注入..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> String <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token string">"Person{"</span> <span class="token operator">+</span>
-                <span class="token string">"car="</span> <span class="token operator">+</span> car <span class="token operator">+</span>
-                <span class="token string">'}'</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
-<p><strong><em>在XML中配置依赖信息中，使用了  Property标签，所以spring会使用 setter方法注入</em></strong></p>
-<h5 id="构造方法注入"><a href="#构造方法注入" class="headerlink" title="构造方法注入"></a>构造方法注入</h5><pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-
-    <span class="token comment" spellcheck="true">&lt;!-- 在xml中描述类与类的配置信息 --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-        <span class="token comment" spellcheck="true">&lt;!-- constructor-arg标签表示，让Spring通过构造方法注入--></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>constructor-arg</span> <span class="token attr-name">ref</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>constructor-arg</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>beans</span><span class="token punctuation">></span></span></code></pre>
-<p><strong><em>在XML中配置依赖信息中，使用了  construtor-arg 标签，所以spring会使用 构造方法注入</em></strong></p>
-<h3 id="自动装配：单一化-lt-bean-gt-的职责"><a href="#自动装配：单一化-lt-bean-gt-的职责" class="headerlink" title="自动装配：单一化 <bean>的职责"></a>自动装配：单一化 &lt;bean&gt;的职责</h3><p>&lt;bean&gt;这个标签有两个作用:</p>
-<ul>
-<li>定义bean，告诉Spring哪个Bean需要交给它管理（放入容器）</li>
-<li>维护bean与bean之间的依赖关系</li>
-</ul>
-<p><strong>但是代码中已经描述了类与类之间的依赖关系，所以&lt;property&gt;和&lt;constructor-arg&gt;冗余了</strong></p>
-<ul>
-<li>既然类结构本身包含了依赖信息，<bean>再用<property>等去描述就显得多余了</property></bean></li>
-<li>如果类结构变动，我们还需要额外维护<bean>的依赖信息，很麻烦。比如Person新增了一个shoes字段，那么<bean>又要写一个<property>表示shoes</property></bean></bean></li>
-</ul>
-<h5 id="单一化职责"><a href="#单一化职责" class="headerlink" title="单一化职责"></a>单一化职责</h5><p>让&lt;bean&gt;标签职责单一化，让它只负责定义bean，把bean与bean的依赖关系转交给类自身维护</p>
-<p>这就是自动装配</p>
-<h5 id="两种自动装配"><a href="#两种自动装配" class="headerlink" title="两种自动装配"></a>两种自动装配</h5><p><strong>XML根标签<beans>末尾加default-autowire配置</beans></strong></p>
-<p>全体配置： 注意第六行</p>
-<pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span>
-        <span class="token attr-name">default-autowire</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>byName<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>  <span class="token comment" spellcheck="true">&lt;!--重要--></span> 
-
-    <span class="token comment" spellcheck="true">&lt;!-- 在xml中只定义bean，无需配置依赖关系 --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>beans</span><span class="token punctuation">></span></span></code></pre>
-<p>局部自动装配（单个配置）每一个&lt;bean&gt;单独设置autowire</p>
-<pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-    <span class="token comment" spellcheck="true">&lt;!-- 在xml中只定义bean，无需配置依赖关系 --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span> <span class="token attr-name">autowire</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>byName<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
-
-&lt;/bean</code></pre>
-<h3 id="XML-注解：XML-context-component-scan-Component"><a href="#XML-注解：XML-context-component-scan-Component" class="headerlink" title="XML+注解：XML+context:component-scan+@Component"></a>XML+注解：XML+<a href="context:component-scan">context:component-scan</a>+@Component</h3><p>前面去除了&lt;bean&gt;的描述依赖的职责，<strong>这次再去除&lt;bean&gt;的定义bean的职责</strong></p>
-<p><strong><em>这样就不需要在XML中写任何<bean>标签了。</bean></em></strong> （普通spring整合好像都是这种方式进行开发）</p>
-<p>原来是把<bean>写在XML中，再把XML喂给Spring：</bean></p>
-<pre class=" language-java"><code class="language-java">ApplicationContext applicationContext <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ClassPathXmlApplicationContext</span><span class="token punctuation">(</span><span class="token string">"spring-context.xml"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p><img src="/.io//image-20201207225606101.png" alt="image-20201207225606101"></p>
-<p>spring读取配置读到了两个内容：</p>
-<ul>
-<li>类名</li>
-<li>装配模式（其实这个也不是必须的，默认no，不自动装配）</li>
-</ul>
-<p>现在简化这两个内容： 类名，写的类中就可获得名字，装配模式（其实不是必须的）</p>
-<p><strong><em>用带注解的类代替&lt;bean&gt;标签</em></strong></p>
-<p>现在：都用@Component、@Service等注解标记，</p>
-<p><img src="/.io//image-20201207225621256.png" alt="image-20201207225621256"></p>
-<p><img src="/.io//image-20201207231250492.png" alt="image-20201207231250492"></p>
-<p>然后XML就只需要配置<strong>有@Component注解的类就是bean，和以前&lt;bean&gt;一样一样的。</strong></p>
-<pre class=" language-xml"><code class="language-xml"> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token namespace">context:</span>component-scan</span> <span class="token attr-name">base-package</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.annotation<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span></code></pre>
-<p>标签的作用有两个：</p>
-<ul>
-<li>扫描：原先我们把写有bean定义的XML文件喂给Spring，现在则让Spring自己去指定路径下扫描bean定义</li>
-<li>解析：让Spring具备解析注解的功能(@Component)</li>
-</ul>
-<p><strong>接下来还要配置自动装配的模式</strong>：</p>
-<ul>
-<li>@Autowired（Spring提供的） </li>
-<li>@Resource（JSR-250定义）</li>
-<li>@Inject（JSR-330定义）</li>
-</ul>
-<p>总结： 就是通过@Component注解<strong>去除 xml中的&lt;bean&gt;**，直接使用自己写的类；通过@Autowired</strong>告诉Spring 装配哪个依赖**</p>
-<p><strong>@Autowired默认采用byType模式自动装配，如果找到多个同类型的，会根据名字匹配。都不匹配，则会报错。</strong></p>
-<p>@Qualifier注解能指定名字，可以和@Autowired配合</p>
-<p>这里@Autowired配置在属性上，还可以配置在setter 方法和构造函数方法上。都是自动注入。</p>
-<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Component</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Person</span> <span class="token punctuation">{</span>
-
-
-    <span class="token comment" spellcheck="true">// 用@Autowired告知Spring：请把Car装配进来</span>
-    <span class="token annotation punctuation">@Autowired</span>
-    <span class="token keyword">private</span> Car car<span class="token punctuation">;</span>
-
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> String <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token string">"Person{"</span> <span class="token operator">+</span>
-                <span class="token string">"car="</span> <span class="token operator">+</span> car <span class="token operator">+</span>
-                <span class="token string">'}'</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
-<h3 id="JavaConfig-注解：-Configuration-ComponentScan-Component"><a href="#JavaConfig-注解：-Configuration-ComponentScan-Component" class="headerlink" title="JavaConfig+注解：@Configuration+@ComponentScan+@Component"></a>JavaConfig+注解：@Configuration+@ComponentScan+@Component</h3><p><strong>注解@Configuration</strong>，目的是让我们可以把一个<strong>普通的Java类等同于一个XML文件</strong>，而这个Java类就是JavaConfig，我们习惯称之为配置类。</p>
-<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span> <span class="token comment" spellcheck="true">//表示这个Java类充当XML配置文件</span>
-<span class="token annotation punctuation">@ComponentScan</span><span class="token punctuation">(</span>basePackages <span class="token operator">=</span> <span class="token string">"com.bravo.javaconfig"</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//相当于XML中的&lt;context:component-scan>标签</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span>
-
-<span class="token punctuation">}</span></code></pre>
-<h3 id="JavaConfig方式：-Configuration-Bean"><a href="#JavaConfig方式：-Configuration-Bean" class="headerlink" title="JavaConfig方式：@Configuration+@Bean"></a>JavaConfig方式：@Configuration+@Bean</h3><p>上面的做法<strong>并不是所谓的Java-based Container Configuration</strong>（@Configuration配置类）风格。我们虽然用到了@Configuration，但只是为了让Java配置类替代XML，最终消灭XML。</p>
-<p>真正的Java-based Container Configuration编程风格是这样的：</p>
-<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span>
-
-    <span class="token comment" spellcheck="true">//new一个Benz对象，通过@Bean注解告知Spring把这个bean加到容器</span>
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> Car <span class="token function">benz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-       <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Benz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token comment" spellcheck="true">//new一个Bmw对象，通过@Bean注解告知Spring把这个bean加到容器</span>
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> Car <span class="token function">bmw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Bmw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token comment" spellcheck="true">//new一个Person对象，通过@Bean注解告知Spring把这个bean加到容器</span>
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> Person <span class="token function">person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        Person p <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        p<span class="token punctuation">.</span><span class="token function">setCar</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Benz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> p<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-<span class="token punctuation">}</span></code></pre>
-<p>Person、Benz、Bmw等类（去除@Component，那是注解开发方式）</p>
-<p><strong>Java-based Container Configuration编程风格指的是：</strong></p>
-<ul>
-<li>用@Configuration把一个普通Java类变成配置类，充当XML</li>
-<li>在配置类中写多个方法，加上@Bean把返回值对象加到Spring容器中</li>
-<li>把配置类AppConfig喂给AnnotationConfigApplicationContext，让它像解析XML一样解析配置类</li>
-<li>无需加@Component注解，因为我们可以手动new之后通过@Bean加入容器</li>
-</ul>
-<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><ul>
-<li><p>纯XML配置开发：没有注解，全部<bean>标签，但也可以配置自动装配</bean></p>
-</li>
-<li><p>注解开发不能单独存在，需要<strong>开启扫描</strong>。自动装配一般用@Autowired</p>
-</li>
-<li><ul>
-<li>XML+注解：XML+<strong><a href="context:component-scan">context:component-scan</a></strong>+@Component</li>
-<li>JavaConfig+注解：@Configuration+<strong>@ComponentScan</strong>+@Component</li>
-</ul>
-</li>
-<li><p>JavaConfig方式：@Configuration+@Bean</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>spring学习</category>
-      </categories>
-      <tags>
-        <tag>spring基础</tag>
-        <tag>注释、xml配置</tag>
-      </tags>
-  </entry>
+      
+      
+        <tags>
+            
+            <tag> 初学者 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
 </search>
