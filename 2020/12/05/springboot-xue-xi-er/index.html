@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trafalgarsx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Spring注解@Resource和@Autowired区别对比@Resource和@Autowired都是做bean的注入时使用，其实**@Resource并不是Spring的注解**，它的包是javax.annotation.Resource，需要导入，但是Spring支持该注解的注入。 共同点：两者都可以写在字段和setter方法上。两者如果都写在字段上，那么就不需要再写setter方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot学习二">
+<meta property="og:url" content="https://trafalgarsx.github.io/2020/12/05/springboot-xue-xi-er/index.html">
+<meta property="og:site_name" content="guoBlog">
+<meta property="og:description" content="Spring注解@Resource和@Autowired区别对比@Resource和@Autowired都是做bean的注入时使用，其实**@Resource并不是Spring的注解**，它的包是javax.annotation.Resource，需要导入，但是Spring支持该注解的注入。 共同点：两者都可以写在字段和setter方法上。两者如果都写在字段上，那么就不需要再写setter方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-04T22:30:16.000Z">
+<meta property="article:modified_time" content="2020-12-04T22:30:16.000Z">
+<meta property="article:author" content="guoyawen">
+<meta property="article:tag" content="shiro">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://trafalgarsx.github.io/2020/12/05/springboot-xue-xi-er/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>springboot学习二 | guoBlog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">guoBlog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">哈哈，他妈了个逼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/12/05/springboot-xue-xi-er/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          springboot学习二
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-04 22:30:16" itemprop="dateCreated datePublished" datetime="2020-12-04T22:30:16Z">2020-12-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/springboot%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">springboot学习</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Spring注解-Resource和-Autowired区别对比"><a href="#Spring注解-Resource和-Autowired区别对比" class="headerlink" title="Spring注解@Resource和@Autowired区别对比"></a>Spring注解@Resource和@Autowired区别对比</h3><p>@Resource和@Autowired都是做bean的注入时使用，其实**@Resource并不是Spring的注解**，它的包是javax.annotation.Resource，需要导入，但是Spring支持该注解的注入。</p>
+<p><strong>共同点</strong>：<br>两者都可以写在字段和setter方法上。两者如果都写在字段上，那么就不需要再写setter方法。</p>
+<p><strong>不同点：</strong><br>@Autowired为Spring提供的注解，需要导入包org.springframework.beans.factory.annotation.Autowired;<strong>只按照byType注入。</strong></p>
+<p><strong>@Autowired注解是按照类型（byType）</strong>装配依赖对象，默认情况下它要求依赖对象必须存在，如果允许null值，可以设置它的required属性为false。如果我们想使用按照名称（byName）来装配，可以结合@Qualifier注解一起使用</p>
+<p><strong>@Resource默认按照ByName自动注入</strong>，由J2EE提供，需要导入包javax.annotation.Resource。@Resource有<strong>两个重要的属性：name和type</strong>，而Spring将@Resource注解的name属性解析为bean的名字，而type属性则解析为bean的类型。所以，如果使用name属性，则使用byName的自动注入策略，而使用type属性时则使用byType自动注入策略。</p>
+<a id="more"></a>
+
+<h3 id="spring注入Bean的几种方式"><a href="#spring注入Bean的几种方式" class="headerlink" title="spring注入Bean的几种方式"></a>spring注入Bean的几种方式</h3><ol>
+<li>配置xml文件<code>    &lt;bean id="bean" class="beandemo.Bean" /&gt;</code><br>一个一个配太麻烦，可以通过一种注解实现注入的方法。只需要在你需要注入的类前面加上相应的注解，Spring就会帮助我们扫描到他们去实现注入。xml扫描包的方式<pre><code>`&lt;context:component-scan base-package="com.company.beandemo"/&gt;`</code></pre>
+</li>
+</ol>
+<p>基于@Autowired的自动装配，默认是根据类型注入，可以用于构造器、字段、方法注入，使用方式如下：</p>
+<p><strong>java代码：</strong></p>
+<ol>
+<li>@Autowired(required=<strong>true</strong>) </li>
+<li>构造器、字段、方法 </li>
+</ol>
+<h5 id="通过构造方法注入Bean"><a href="#通过构造方法注入Bean" class="headerlink" title="通过构造方法注入Bean"></a>通过构造方法注入Bean</h5><p><strong>构造器注入：</strong>通过将@Autowired注解放在构造器上来完成构造器注入，默认构造器参数通过类型自动装配</p>
+<ol>
+<li><pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> cn<span class="token punctuation">.</span>javass<span class="token punctuation">.</span>spring<span class="token punctuation">.</span>chapter12<span class="token punctuation">;</span>  
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>beans<span class="token punctuation">.</span>factory<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>Autowired<span class="token punctuation">;</span>  
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestBean11</span> <span class="token punctuation">{</span>  
+ <span class="token keyword">private</span> String message<span class="token punctuation">;</span>  
+ <span class="token annotation punctuation">@Autowired</span> <span class="token comment" spellcheck="true">//构造器注入  </span>
+ <span class="token keyword">private</span> <span class="token function">TestBean11</span><span class="token punctuation">(</span>String message<span class="token punctuation">)</span> <span class="token punctuation">{</span>  
+     <span class="token keyword">this</span><span class="token punctuation">.</span>message <span class="token operator">=</span> message<span class="token punctuation">;</span>  
+ <span class="token punctuation">}</span>  
+ <span class="token comment" spellcheck="true">//省略message的getter和setter  </span>
+<span class="token punctuation">}</span>  </code></pre>
+</li>
+<li><p>在Spring配置文件（chapter12/dependecyInjectWithAnnotation.xml）添加如下Bean配置：<br><code>&lt;bean id="testBean11" class="cn.javass.spring.chapter12.TestBean11"/&gt;  </code></p>
+</li>
+</ol>
+<h5 id="通过set方法注入Bean"><a href="#通过set方法注入Bean" class="headerlink" title="通过set方法注入Bean"></a>通过set方法注入Bean</h5><p><strong>方法参数注入：</strong>通过将@Autowired注解放在方法上来完成方法参数注入。</p>
+<pre class=" language-Java"><code class="language-Java">package&nbsp;cn.javass.spring.chapter12;&nbsp;&nbsp;
+import&nbsp;org.springframework.beans.factory.annotation.Autowired;&nbsp;&nbsp;
+public&nbsp;class&nbsp;TestBean13&nbsp;{&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;String&nbsp;message;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;@Autowired&nbsp;//setter方法注入&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;setMessage(String&nbsp;message)&nbsp;{&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.message&nbsp;=&nbsp;message;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;String&nbsp;getMessage()&nbsp;{&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;message;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;
+}&nbsp;&nbsp;</code></pre>
+<h5 id="通过属性-字段-注入Bean"><a href="#通过属性-字段-注入Bean" class="headerlink" title="通过属性(字段)注入Bean"></a>通过属性(字段)注入Bean</h5><p>1、准备测试Bean，在字段上添加@AutoWired注解：</p>
+<pre class=" language-Java"><code class="language-Java">package&nbsp;cn.javass.spring.chapter12;&nbsp;&nbsp;
+import&nbsp;org.springframework.beans.factory.annotation.Autowired;&nbsp;&nbsp;
+public&nbsp;class&nbsp;TestBean12&nbsp;{&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;@Autowired&nbsp;//字段注入&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;String&nbsp;message;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;//省略getter和setter&nbsp;&nbsp;
+}&nbsp;</code></pre>
+<p>2、在Spring配置文件（chapter12/dependecyInjectWithAnnotation.xml）添加如下Bean配置：<br><code>&lt;bean id="testBean12" class="cn.javass.spring.chapter12.TestBean12"/&gt;  </code>同上</p>
+<h5 id="静态工厂注入"><a href="#静态工厂注入" class="headerlink" title="静态工厂注入"></a>静态工厂注入</h5><h3 id="shiro整合redis"><a href="#shiro整合redis" class="headerlink" title="shiro整合redis"></a>shiro整合redis</h3>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/shiro/" rel="tag"># shiro</a>
+              <a href="/tags/redis/" rel="tag"># redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/04/springboot-quan-ju-yi-chang-chu-li/" rel="prev" title="springboot学习一">
+      <i class="fa fa-chevron-left"></i> springboot学习一
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/" rel="next" title="spring注释/xml配置开发区别">
+      spring注释/xml配置开发区别 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring%E6%B3%A8%E8%A7%A3-Resource%E5%92%8C-Autowired%E5%8C%BA%E5%88%AB%E5%AF%B9%E6%AF%94"><span class="nav-number">1.</span> <span class="nav-text">Spring注解@Resource和@Autowired区别对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring%E6%B3%A8%E5%85%A5Bean%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">spring注入Bean的几种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E6%B3%A8%E5%85%A5Bean"><span class="nav-number">2.0.1.</span> <span class="nav-text">通过构造方法注入Bean</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E8%BF%87set%E6%96%B9%E6%B3%95%E6%B3%A8%E5%85%A5Bean"><span class="nav-number">2.0.2.</span> <span class="nav-text">通过set方法注入Bean</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%B1%9E%E6%80%A7-%E5%AD%97%E6%AE%B5-%E6%B3%A8%E5%85%A5Bean"><span class="nav-number">2.0.3.</span> <span class="nav-text">通过属性(字段)注入Bean</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%B7%A5%E5%8E%82%E6%B3%A8%E5%85%A5"><span class="nav-number">2.0.4.</span> <span class="nav-text">静态工厂注入</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shiro%E6%95%B4%E5%90%88redis"><span class="nav-number">3.</span> <span class="nav-text">shiro整合redis</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="guoyawen"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">guoyawen</p>
+  <div class="site-description" itemprop="description">一个浪费时间的网站</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/trafalgarSX" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;trafalgarSX" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1148636359g@gmail.com" title="E-Mail → mailto:1148636359g@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guoyawen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

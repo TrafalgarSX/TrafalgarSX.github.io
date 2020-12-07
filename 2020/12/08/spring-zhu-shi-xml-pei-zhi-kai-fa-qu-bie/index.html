@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trafalgarsx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="XML开发方式（XML配置繁琐） Spring注解方式（有助于学习SpringBoot）  主要内容：  IOC与DI Spring的3种编程风格与2种注入方式 1️⃣XML配置开发：描述依赖关系 自动装配：让职责单一化 2️⃣XML+注解：XML+context:component-scan+@Component() @Autowired的小秘密 2️⃣JavaConfig+注解：@Confi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring注释&#x2F;xml配置开发区别">
+<meta property="og:url" content="https://trafalgarsx.github.io/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/index.html">
+<meta property="og:site_name" content="guoBlog">
+<meta property="og:description" content="XML开发方式（XML配置繁琐） Spring注解方式（有助于学习SpringBoot）  主要内容：  IOC与DI Spring的3种编程风格与2种注入方式 1️⃣XML配置开发：描述依赖关系 自动装配：让职责单一化 2️⃣XML+注解：XML+context:component-scan+@Component() @Autowired的小秘密 2️⃣JavaConfig+注解：@Confi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://trafalgarsx.github.io/.io//image-20201207220242109.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/.io//image-20201207221157075.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/.io//image-20201207225606101.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/.io//image-20201207225621256.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/.io//image-20201207231250492.png">
+<meta property="article:published_time" content="2020-12-07T21:48:34.000Z">
+<meta property="article:modified_time" content="2020-12-07T21:48:34.000Z">
+<meta property="article:author" content="guoyawen">
+<meta property="article:tag" content="spring基础">
+<meta property="article:tag" content="注释、xml配置">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://trafalgarsx.github.io/.io//image-20201207220242109.png">
+
+<link rel="canonical" href="https://trafalgarsx.github.io/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>spring注释/xml配置开发区别 | guoBlog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">guoBlog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">哈哈，他妈了个逼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          spring注释/xml配置开发区别
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-07 21:48:34" itemprop="dateCreated datePublished" datetime="2020-12-07T21:48:34Z">2020-12-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">spring学习</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<p><strong>XML开发方式</strong>（XML配置繁琐）</p>
+<p><strong>Spring注解方式（有助于学习SpringBoot）</strong></p>
+<hr>
+<p>主要内容：</p>
+<ul>
+<li>IOC与DI</li>
+<li>Spring的3种编程风格与2种注入方式</li>
+<li>1️⃣XML配置开发：<bean>描述依赖关系</bean></li>
+<li>自动装配：让<bean>职责单一化</bean></li>
+<li>2️⃣XML+注解：XML+<a href="context:component-scan">context:component-scan</a>+@Component()</li>
+<li>@Autowired的小秘密</li>
+<li>2️⃣JavaConfig+注解：@Configuration+@ComponentScan+@Component</li>
+<li>3️⃣JavaConfig方式：@Configuration+@Bean</li>
+<li>大乱斗：@ImportResource、@Component、@Bean</li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/72668451">主要参考内容</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/shz365/p/5088289.html">配合参考内容</a></li>
+</ul>
+<hr>
+<a id="more"></a>
+
+<h3 id="Spring-IOC"><a href="#Spring-IOC" class="headerlink" title="Spring IOC"></a>Spring IOC</h3><p>不妨将IOC理解成一种思想，而DI是实现该思想的一种具体方式。Spring被称为IOC容器</p>
+<p><img src="/.io//image-20201207220242109.png" alt="Spring IOC"></p>
+<h3 id="Spring依赖注入的做法"><a href="#Spring依赖注入的做法" class="headerlink" title="Spring依赖注入的做法"></a>Spring依赖注入的做法</h3><p>通过配置信息（XML）来描述类与类之间的关系，然后通过IOC容器（Spring Context）去解析配置信息。</p>
+<pre class=" language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!-- 配置信息：在XML中定义Bean --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.annotation.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token comment" spellcheck="true">&lt;!--ref是参照的意思，在代码中表示person类中有该成员变量，依赖关系的表现--></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">ref</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.annotation.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span></code></pre>
+<p>总结：</p>
+<ul>
+<li>配置信息用来描述类与类之间的关系（XML/注解/Configuration配置类都可以）</li>
+<li>对象之间的依赖关系必须在类中定义好（依赖的成员作为成员变量，和配置中匹配）</li>
+<li>Spring通过配置信息，用构造方法或者setter方法完成依赖注入</li>
+</ul>
+<h5 id="3种变成风格和两种注入方式"><a href="#3种变成风格和两种注入方式" class="headerlink" title="3种变成风格和两种注入方式"></a>3种变成风格和两种注入方式</h5><p>将Bean交给Spring管理的3种方式：</p>
+<ul>
+<li>XML配置</li>
+<li>注解</li>
+<li>@Configuration配置类</li>
+</ul>
+<p>注入方式：</p>
+<ul>
+<li>构造方法注入</li>
+<li>setter方法注入</li>
+</ul>
+<p><img src="/.io//image-20201207221157075.png" alt="重点在下面"></p>
+<h5 id="setter方法注入"><a href="#setter方法注入" class="headerlink" title="setter方法注入"></a>setter方法注入</h5><p>pom.xml</p>
+<pre class=" language-xml"><code class="language-xml"> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-context<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>4.3.12.RELEASE<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">></span></span></code></pre>
+<p>配置信息（setter方法注入）</p>
+<pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+
+    <span class="token comment" spellcheck="true">&lt;!-- 在xml中描述类与类的配置信息 --></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token comment" spellcheck="true">&lt;!-- property标签表示，让Spring通过setter方法注入--></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">ref</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
+&lt;/bean</code></pre>
+<p>Person类</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Person</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Person依赖Car</span>
+    <span class="token keyword">private</span> Car car<span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 无参构造</span>
+    <span class="token keyword">public</span> <span class="token function">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 有参构造</span>
+    <span class="token keyword">public</span> <span class="token function">Person</span><span class="token punctuation">(</span>Car car<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>car <span class="token operator">=</span> car<span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"通过构造方法注入..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// setter方法</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setCar</span><span class="token punctuation">(</span>Car car<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>car <span class="token operator">=</span> car<span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"通过setter方法注入..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> String <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"Person{"</span> <span class="token operator">+</span>
+                <span class="token string">"car="</span> <span class="token operator">+</span> car <span class="token operator">+</span>
+                <span class="token string">'}'</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p><strong><em>在XML中配置依赖信息中，使用了  Property标签，所以spring会使用 setter方法注入</em></strong></p>
+<h5 id="构造方法注入"><a href="#构造方法注入" class="headerlink" title="构造方法注入"></a>构造方法注入</h5><pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+
+    <span class="token comment" spellcheck="true">&lt;!-- 在xml中描述类与类的配置信息 --></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token comment" spellcheck="true">&lt;!-- constructor-arg标签表示，让Spring通过构造方法注入--></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>constructor-arg</span> <span class="token attr-name">ref</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>constructor-arg</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>beans</span><span class="token punctuation">></span></span></code></pre>
+<p><strong><em>在XML中配置依赖信息中，使用了  construtor-arg 标签，所以spring会使用 构造方法注入</em></strong></p>
+<h3 id="自动装配：单一化-lt-bean-gt-的职责"><a href="#自动装配：单一化-lt-bean-gt-的职责" class="headerlink" title="自动装配：单一化 <bean>的职责"></a>自动装配：单一化 &lt;bean&gt;的职责</h3><p>&lt;bean&gt;这个标签有两个作用:</p>
+<ul>
+<li>定义bean，告诉Spring哪个Bean需要交给它管理（放入容器）</li>
+<li>维护bean与bean之间的依赖关系</li>
+</ul>
+<p><strong>但是代码中已经描述了类与类之间的依赖关系，所以&lt;property&gt;和&lt;constructor-arg&gt;冗余了</strong></p>
+<ul>
+<li>既然类结构本身包含了依赖信息，<bean>再用<property>等去描述就显得多余了</property></bean></li>
+<li>如果类结构变动，我们还需要额外维护<bean>的依赖信息，很麻烦。比如Person新增了一个shoes字段，那么<bean>又要写一个<property>表示shoes</property></bean></bean></li>
+</ul>
+<h5 id="单一化职责"><a href="#单一化职责" class="headerlink" title="单一化职责"></a>单一化职责</h5><p>让&lt;bean&gt;标签职责单一化，让它只负责定义bean，把bean与bean的依赖关系转交给类自身维护</p>
+<p>这就是自动装配</p>
+<h5 id="两种自动装配"><a href="#两种自动装配" class="headerlink" title="两种自动装配"></a>两种自动装配</h5><p><strong>XML根标签<beans>末尾加default-autowire配置</beans></strong></p>
+<p>全体配置： 注意第六行</p>
+<pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span>
+        <span class="token attr-name">default-autowire</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>byName<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>  <span class="token comment" spellcheck="true">&lt;!--重要--></span> 
+
+    <span class="token comment" spellcheck="true">&lt;!-- 在xml中只定义bean，无需配置依赖关系 --></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>beans</span><span class="token punctuation">></span></span></code></pre>
+<p>局部自动装配（单个配置）每一个&lt;bean&gt;单独设置autowire</p>
+<pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token comment" spellcheck="true">&lt;!-- 在xml中只定义bean，无需配置依赖关系 --></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Person<span class="token punctuation">"</span></span> <span class="token attr-name">autowire</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>byName<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>car<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.xml.Car<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
+
+&lt;/bean</code></pre>
+<h3 id="XML-注解：XML-context-component-scan-Component"><a href="#XML-注解：XML-context-component-scan-Component" class="headerlink" title="XML+注解：XML+context:component-scan+@Component"></a>XML+注解：XML+<a href="context:component-scan">context:component-scan</a>+@Component</h3><p>前面去除了&lt;bean&gt;的描述依赖的职责，<strong>这次再去除&lt;bean&gt;的定义bean的职责</strong></p>
+<p><strong><em>这样就不需要在XML中写任何<bean>标签了。</bean></em></strong> （普通spring整合好像都是这种方式进行开发）</p>
+<p>原来是把<bean>写在XML中，再把XML喂给Spring：</bean></p>
+<pre class=" language-java"><code class="language-java">ApplicationContext applicationContext <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ClassPathXmlApplicationContext</span><span class="token punctuation">(</span><span class="token string">"spring-context.xml"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><img src="/.io//image-20201207225606101.png" alt="image-20201207225606101"></p>
+<p>spring读取配置读到了两个内容：</p>
+<ul>
+<li>类名</li>
+<li>装配模式（其实这个也不是必须的，默认no，不自动装配）</li>
+</ul>
+<p>现在简化这两个内容： 类名，写的类中就可获得名字，装配模式（其实不是必须的）</p>
+<p><strong><em>用带注解的类代替&lt;bean&gt;标签</em></strong></p>
+<p>现在：都用@Component、@Service等注解标记，</p>
+<p><img src="/.io//image-20201207225621256.png" alt="image-20201207225621256"></p>
+<p><img src="/.io//image-20201207231250492.png" alt="image-20201207231250492"></p>
+<p>然后XML就只需要配置<strong>有@Component注解的类就是bean，和以前&lt;bean&gt;一样一样的。</strong></p>
+<pre class=" language-xml"><code class="language-xml"> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token namespace">context:</span>component-scan</span> <span class="token attr-name">base-package</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.annotation<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span></code></pre>
+<p>标签的作用有两个：</p>
+<ul>
+<li>扫描：原先我们把写有bean定义的XML文件喂给Spring，现在则让Spring自己去指定路径下扫描bean定义</li>
+<li>解析：让Spring具备解析注解的功能(@Component)</li>
+</ul>
+<p><strong>接下来还要配置自动装配的模式</strong>：</p>
+<ul>
+<li>@Autowired（Spring提供的） </li>
+<li>@Resource（JSR-250定义）</li>
+<li>@Inject（JSR-330定义）</li>
+</ul>
+<p>总结： 就是通过@Component注解<strong>去除 xml中的&lt;bean&gt;**，直接使用自己写的类；通过@Autowired</strong>告诉Spring 装配哪个依赖**</p>
+<p><strong>@Autowired默认采用byType模式自动装配，如果找到多个同类型的，会根据名字匹配。都不匹配，则会报错。</strong></p>
+<p>@Qualifier注解能指定名字，可以和@Autowired配合</p>
+<p>这里@Autowired配置在属性上，还可以配置在setter 方法和构造函数方法上。都是自动注入。</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Person</span> <span class="token punctuation">{</span>
+
+
+    <span class="token comment" spellcheck="true">// 用@Autowired告知Spring：请把Car装配进来</span>
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> Car car<span class="token punctuation">;</span>
+
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> String <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"Person{"</span> <span class="token operator">+</span>
+                <span class="token string">"car="</span> <span class="token operator">+</span> car <span class="token operator">+</span>
+                <span class="token string">'}'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="JavaConfig-注解：-Configuration-ComponentScan-Component"><a href="#JavaConfig-注解：-Configuration-ComponentScan-Component" class="headerlink" title="JavaConfig+注解：@Configuration+@ComponentScan+@Component"></a>JavaConfig+注解：@Configuration+@ComponentScan+@Component</h3><p><strong>注解@Configuration</strong>，目的是让我们可以把一个<strong>普通的Java类等同于一个XML文件</strong>，而这个Java类就是JavaConfig，我们习惯称之为配置类。</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span> <span class="token comment" spellcheck="true">//表示这个Java类充当XML配置文件</span>
+<span class="token annotation punctuation">@ComponentScan</span><span class="token punctuation">(</span>basePackages <span class="token operator">=</span> <span class="token string">"com.bravo.javaconfig"</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//相当于XML中的&lt;context:component-scan>标签</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span>
+
+<span class="token punctuation">}</span></code></pre>
+<h3 id="JavaConfig方式：-Configuration-Bean"><a href="#JavaConfig方式：-Configuration-Bean" class="headerlink" title="JavaConfig方式：@Configuration+@Bean"></a>JavaConfig方式：@Configuration+@Bean</h3><p>上面的做法<strong>并不是所谓的Java-based Container Configuration</strong>（@Configuration配置类）风格。我们虽然用到了@Configuration，但只是为了让Java配置类替代XML，最终消灭XML。</p>
+<p>真正的Java-based Container Configuration编程风格是这样的：</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">//new一个Benz对象，通过@Bean注解告知Spring把这个bean加到容器</span>
+    <span class="token annotation punctuation">@Bean</span>
+    <span class="token keyword">public</span> Car <span class="token function">benz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+       <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Benz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">//new一个Bmw对象，通过@Bean注解告知Spring把这个bean加到容器</span>
+    <span class="token annotation punctuation">@Bean</span>
+    <span class="token keyword">public</span> Car <span class="token function">bmw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Bmw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">//new一个Person对象，通过@Bean注解告知Spring把这个bean加到容器</span>
+    <span class="token annotation punctuation">@Bean</span>
+    <span class="token keyword">public</span> Person <span class="token function">person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        Person p <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        p<span class="token punctuation">.</span><span class="token function">setCar</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Benz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> p<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span></code></pre>
+<p>Person、Benz、Bmw等类（去除@Component，那是注解开发方式）</p>
+<p><strong>Java-based Container Configuration编程风格指的是：</strong></p>
+<ul>
+<li>用@Configuration把一个普通Java类变成配置类，充当XML</li>
+<li>在配置类中写多个方法，加上@Bean把返回值对象加到Spring容器中</li>
+<li>把配置类AppConfig喂给AnnotationConfigApplicationContext，让它像解析XML一样解析配置类</li>
+<li>无需加@Component注解，因为我们可以手动new之后通过@Bean加入容器</li>
+</ul>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><ul>
+<li><p>纯XML配置开发：没有注解，全部<bean>标签，但也可以配置自动装配</bean></p>
+</li>
+<li><p>注解开发不能单独存在，需要<strong>开启扫描</strong>。自动装配一般用@Autowired</p>
+</li>
+<li><ul>
+<li>XML+注解：XML+<strong><a href="context:component-scan">context:component-scan</a></strong>+@Component</li>
+<li>JavaConfig+注解：@Configuration+<strong>@ComponentScan</strong>+@Component</li>
+</ul>
+</li>
+<li><p>JavaConfig方式：@Configuration+@Bean</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/spring%E5%9F%BA%E7%A1%80/" rel="tag"># spring基础</a>
+              <a href="/tags/%E6%B3%A8%E9%87%8A%E3%80%81xml%E9%85%8D%E7%BD%AE/" rel="tag"># 注释、xml配置</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/05/springboot-xue-xi-er/" rel="prev" title="springboot学习二">
+      <i class="fa fa-chevron-left"></i> springboot学习二
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/08/java-ji-chu-1/" rel="next" title="Java基础(1)">
+      Java基础(1) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-IOC"><span class="nav-number">1.</span> <span class="nav-text">Spring IOC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E5%81%9A%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">Spring依赖注入的做法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3%E7%A7%8D%E5%8F%98%E6%88%90%E9%A3%8E%E6%A0%BC%E5%92%8C%E4%B8%A4%E7%A7%8D%E6%B3%A8%E5%85%A5%E6%96%B9%E5%BC%8F"><span class="nav-number">2.0.1.</span> <span class="nav-text">3种变成风格和两种注入方式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#setter%E6%96%B9%E6%B3%95%E6%B3%A8%E5%85%A5"><span class="nav-number">2.0.2.</span> <span class="nav-text">setter方法注入</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E6%B3%A8%E5%85%A5"><span class="nav-number">2.0.3.</span> <span class="nav-text">构造方法注入</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%EF%BC%9A%E5%8D%95%E4%B8%80%E5%8C%96-lt-bean-gt-%E7%9A%84%E8%81%8C%E8%B4%A3"><span class="nav-number">3.</span> <span class="nav-text">自动装配：单一化 &lt;bean&gt;的职责</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8D%95%E4%B8%80%E5%8C%96%E8%81%8C%E8%B4%A3"><span class="nav-number">3.0.1.</span> <span class="nav-text">单一化职责</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D"><span class="nav-number">3.0.2.</span> <span class="nav-text">两种自动装配</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XML-%E6%B3%A8%E8%A7%A3%EF%BC%9AXML-context-component-scan-Component"><span class="nav-number">4.</span> <span class="nav-text">XML+注解：XML+context:component-scan+@Component</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JavaConfig-%E6%B3%A8%E8%A7%A3%EF%BC%9A-Configuration-ComponentScan-Component"><span class="nav-number">5.</span> <span class="nav-text">JavaConfig+注解：@Configuration+@ComponentScan+@Component</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JavaConfig%E6%96%B9%E5%BC%8F%EF%BC%9A-Configuration-Bean"><span class="nav-number">6.</span> <span class="nav-text">JavaConfig方式：@Configuration+@Bean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">总结：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="guoyawen"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">guoyawen</p>
+  <div class="site-description" itemprop="description">一个浪费时间的网站</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/trafalgarSX" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;trafalgarSX" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1148636359g@gmail.com" title="E-Mail → mailto:1148636359g@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guoyawen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
