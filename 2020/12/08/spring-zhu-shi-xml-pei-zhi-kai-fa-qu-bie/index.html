@@ -28,6 +28,7 @@
 <meta property="og:description" content="XML开发方式（XML配置繁琐） Spring注解方式（有助于学习SpringBoot）  主要内容：  IOC与DI Spring的3种编程风格与2种注入方式 1️⃣XML配置开发：描述依赖关系 自动装配：让职责单一化 2️⃣XML+注解：XML+context:component-scan+@Component() @Autowired的小秘密 2️⃣JavaConfig+注解：@Confi">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://trafalgarsx.github.io/.io//image-20201207220242109.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/.io//12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/image-20201207220242109.png">
 <meta property="og:image" content="https://trafalgarsx.github.io/.io//image-20201207221157075.png">
 <meta property="og:image" content="https://trafalgarsx.github.io/.io//image-20201207225606101.png">
 <meta property="og:image" content="https://trafalgarsx.github.io/.io//image-20201207225621256.png">
@@ -280,6 +281,8 @@
 
 <h3 id="Spring-IOC"><a href="#Spring-IOC" class="headerlink" title="Spring IOC"></a>Spring IOC</h3><p>不妨将IOC理解成一种思想，而DI是实现该思想的一种具体方式。Spring被称为IOC容器</p>
 <p><img src="/.io//image-20201207220242109.png" alt="Spring IOC"></p>
+<img src="/.io//12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/image-20201207220242109.png" class="" title="This is an image">
+
 <h3 id="Spring依赖注入的做法"><a href="#Spring依赖注入的做法" class="headerlink" title="Spring依赖注入的做法"></a>Spring依赖注入的做法</h3><p>通过配置信息（XML）来描述类与类之间的关系，然后通过IOC容器（Spring Context）去解析配置信息。</p>
 <pre class=" language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!-- 配置信息：在XML中定义Bean --></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>person<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.annotation.Person<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
@@ -373,8 +376,8 @@
 </ul>
 <p><strong>但是代码中已经描述了类与类之间的依赖关系，所以&lt;property&gt;和&lt;constructor-arg&gt;冗余了</strong></p>
 <ul>
-<li>既然类结构本身包含了依赖信息，<bean>再用<property>等去描述就显得多余了</property></bean></li>
-<li>如果类结构变动，我们还需要额外维护<bean>的依赖信息，很麻烦。比如Person新增了一个shoes字段，那么<bean>又要写一个<property>表示shoes</property></bean></bean></li>
+<li>既然类结构本身包含了依赖信息，&lt;bean&gt;再用&lt;property&gt;等去描述就显得多余了</li>
+<li>如果类结构变动，我们还需要额外维护&lt;bean&gt;的依赖信息，很麻烦。比如Person新增了一个shoes字段，那么&lt;bean&gt;又要写一个&lt;property&gt;表示shoes</li>
 </ul>
 <h5 id="单一化职责"><a href="#单一化职责" class="headerlink" title="单一化职责"></a>单一化职责</h5><p>让&lt;bean&gt;标签职责单一化，让它只负责定义bean，把bean与bean的依赖关系转交给类自身维护</p>
 <p>这就是自动装配</p>
@@ -604,20 +607,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
