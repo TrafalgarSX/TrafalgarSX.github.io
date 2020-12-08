@@ -338,8 +338,7 @@ Result类返回错误信息的类，包含响应状态编码，响应信息等</
 <a id="more"></a>
 
 <h3 id="Spring-IOC"><a href="#Spring-IOC" class="headerlink" title="Spring IOC"></a>Spring IOC</h3><p>不妨将IOC理解成一种思想，而DI是实现该思想的一种具体方式。Spring被称为IOC容器</p>
-<p><img src="/.io//image-20201207220242109.png" alt="Spring IOC"></p>
-<img src="/.io//12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/image-20201207220242109.png" class="" title="This is an image">
+<img src="/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/image-20201207220242109.png" class="" title="Spring IOC">
 
 <h3 id="Spring依赖注入的做法"><a href="#Spring依赖注入的做法" class="headerlink" title="Spring依赖注入的做法"></a>Spring依赖注入的做法</h3><p>通过配置信息（XML）来描述类与类之间的关系，然后通过IOC容器（Spring Context）去解析配置信息。</p>
 <pre class=" language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!-- 配置信息：在XML中定义Bean --></span>
@@ -365,8 +364,7 @@ Result类返回错误信息的类，包含响应状态编码，响应信息等</
 <li>构造方法注入</li>
 <li>setter方法注入</li>
 </ul>
-<p><img src="/.io//image-20201207221157075.png" alt="重点在下面"></p>
-<img src="/.io//12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/image-20201207221157075.png" class="" title="This is an image">
+<img src="/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/image-20201207221157075.png" class="" title="重点在下面">
 
 <h5 id="setter方法注入"><a href="#setter方法注入" class="headerlink" title="setter方法注入"></a>setter方法注入</h5><p>pom.xml</p>
 <pre class=" language-xml"><code class="language-xml"> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">></span></span>
@@ -470,7 +468,8 @@ Result类返回错误信息的类，包含响应状态编码，响应信息等</
 <p><strong><em>这样就不需要在XML中写任何&lt;bean&gt;标签了。</em></strong> （普通spring整合好像都是这种方式进行开发）</p>
 <p>原来是把<bean>写在XML中，再把XML喂给Spring：</bean></p>
 <pre class=" language-java"><code class="language-java">ApplicationContext applicationContext <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ClassPathXmlApplicationContext</span><span class="token punctuation">(</span><span class="token string">"spring-context.xml"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p><img src="/.io//image-20201207225606101.png" alt="image-20201207225606101"></p>
+<img src="/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/image-20201207225606101.png" class="" title="image-20201207225606101">
+
 <p>spring读取配置读到了两个内容：</p>
 <ul>
 <li>类名</li>
@@ -479,11 +478,13 @@ Result类返回错误信息的类，包含响应状态编码，响应信息等</
 <p>现在简化这两个内容： 类名，写的类中就可获得名字，装配模式（其实不是必须的）</p>
 <p><strong><em>用带注解的类代替&lt;bean&gt;标签</em></strong></p>
 <p>现在：都用@Component、@Service等注解标记，</p>
-<p><img src="/.io//image-20201207225621256.png" alt="image-20201207225621256"></p>
-<img src="/.io//12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/image-20201207225621256.png" class="" title="This is an image">
+<img src="/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/image-20201207225621256.png" class="" title="image-20201207225621256">
 
-<p><img src="/.io//image-20201207231250492.png" alt="image-20201207231250492"></p>
-<img src="/.io//12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/image-20201207231250492.png" class="" title="This is an image">
+
+
+<img src="/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/image-20201207231250492.png" class="" title="image-20201207231250492">
+
+
 
 <p>然后XML就只需要配置<strong>有@Component注解的类就是bean，和以前&lt;bean&gt;一样一样的。</strong></p>
 <pre class=" language-xml"><code class="language-xml"> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token namespace">context:</span>component-scan</span> <span class="token attr-name">base-package</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.bravo.annotation<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span></code></pre>
