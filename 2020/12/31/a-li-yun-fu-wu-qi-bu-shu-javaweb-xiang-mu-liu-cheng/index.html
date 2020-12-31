@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trafalgarsx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="阿里云服务器部署JavaWeb项目完整流程  确保tomcat、jdk、mysql、redis等常用软件安装配置完成，环境变量设置完成。 配置（修改）tomcat server.xml文件，开放服务器相应端口达到远程访问的目的。 idea打包JavaWeb项目（war包）。 上传到tomcat对应文件夹的位置。 访问ip+路径即可。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阿里云服务器部署JavaWeb项目流程">
+<meta property="og:url" content="https://trafalgarsx.github.io/2020/12/31/a-li-yun-fu-wu-qi-bu-shu-javaweb-xiang-mu-liu-cheng/index.html">
+<meta property="og:site_name" content="guoBlog">
+<meta property="og:description" content="阿里云服务器部署JavaWeb项目完整流程  确保tomcat、jdk、mysql、redis等常用软件安装配置完成，环境变量设置完成。 配置（修改）tomcat server.xml文件，开放服务器相应端口达到远程访问的目的。 idea打包JavaWeb项目（war包）。 上传到tomcat对应文件夹的位置。 访问ip+路径即可。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://trafalgarsx.github.io/2020/12/31/a-li-yun-fu-wu-qi-bu-shu-javaweb-xiang-mu-liu-cheng/image-20201231155654462.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/2020/12/31/a-li-yun-fu-wu-qi-bu-shu-javaweb-xiang-mu-liu-cheng/image-20201231160551231.png">
+<meta property="article:published_time" content="2020-12-31T14:08:24.000Z">
+<meta property="article:modified_time" content="2020-12-31T14:08:24.000Z">
+<meta property="article:author" content="guoyawen">
+<meta property="article:tag" content="部署JavaWeb项目">
+<meta property="article:tag" content="Linux软件安装">
+<meta property="article:tag" content="环境配置">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://trafalgarsx.github.io/2020/12/31/a-li-yun-fu-wu-qi-bu-shu-javaweb-xiang-mu-liu-cheng/image-20201231155654462.png">
+
+<link rel="canonical" href="https://trafalgarsx.github.io/2020/12/31/a-li-yun-fu-wu-qi-bu-shu-javaweb-xiang-mu-liu-cheng/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>阿里云服务器部署JavaWeb项目流程 | guoBlog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">guoBlog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">哈哈，他妈了个逼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/12/31/a-li-yun-fu-wu-qi-bu-shu-javaweb-xiang-mu-liu-cheng/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          阿里云服务器部署JavaWeb项目流程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-31 14:08:24" itemprop="dateCreated datePublished" datetime="2020-12-31T14:08:24Z">2020-12-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%85%8D%E7%BD%AE/" itemprop="url" rel="index"><span itemprop="name">配置</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>阿里云服务器部署JavaWeb项目完整流程</p>
+<ol>
+<li>确保tomcat、jdk、mysql、redis等常用软件安装配置完成，环境变量设置完成。</li>
+<li>配置（修改）tomcat server.xml文件，开放服务器相应端口达到远程访问的目的。</li>
+<li>idea打包JavaWeb项目（war包）。</li>
+<li>上传到tomcat对应文件夹的位置。</li>
+<li>访问ip+路径即可。</li>
+</ol>
+<a id="more"></a>
+
+<h3 id="安装所需软件"><a href="#安装所需软件" class="headerlink" title="安装所需软件"></a>安装所需软件</h3><p>一个JavaWeb项目通常需要 tomcat jdk mysql redis等常用软件，可以按需下在项目对应版本进行使用，比如tomcat9 jdk8 mysql8等安装自己想要的版本。</p>
+<p>卸载自带版本软件 可以 通过 <code>yum remove softwareName</code> </p>
+<p>也可以<code>rpm -qa | grep tomcat</code> 命令查找软件信息后删除，具体操作百度、谷歌最好。</p>
+<ul>
+<li>可以通过 ·<code>yum install softwareName</code>  进行安装，但是这个不一定能够安装自己想要的版本。</li>
+<li>也可以通过下载源码，编译安装或者下载压缩包（绿色安装，解压完开箱即用）。</li>
+</ul>
+<h5 id="tomcat安装"><a href="#tomcat安装" class="headerlink" title="tomcat安装"></a>tomcat安装</h5><p><a target="_blank" rel="noopener" href="https://tomcat.apache.org/download-90.cgi">tomcat下载地址</a></p>
+<ol>
+<li>下载tomcat可以手动下载然后用 <code>rz</code>命令传送到Linux服务器上，也可以通过以下命令直接下载。</li>
+</ol>
+<ul>
+<li><code>wget http://apache.mirrors.pair.com/tomcat/tomcat-9/v9.0.37/bin/apache-tomcat-9.0.37.tar.gz</code></li>
+</ul>
+<ol start="2">
+<li>解压缩，命令： <code>tar -xzvf  softwareName.tar.gz</code>,解压后可以重命名，要不然名字太长了。</li>
+<li>上面解压缩后一般放到 /usr/local/   文件夹下，这个文件夹是放自己下载的文件的，大家这样，不太了解为啥。不过规范一下，不要乱放。</li>
+<li>解压缩后，进入解压后（重命名后）的tomcat文件夹下的 bin目录中， 可以运行启动或者停止命令。启动后，可以通过浏览器访问   <code>YourIp:8080</code>   这个url如果看到 tomcat主页，就是tomcat运行成功。</li>
+</ol>
+<p><code>./startup.sh 启动  </code>    <code>./shutdown.sh   关闭</code>    </p>
+<p><strong>添加环境变量</strong> （方便操作）：编辑    /etc/profile文件  在文件的最后添加以下内容：</p>
+<pre class=" language-markdown"><code class="language-markdown">export CATALINA<span class="token italic"><span class="token punctuation">_</span>HOME=usr/local/tomcat/tomcat9  (tomcat9是我重命名的文件，我先创建了一个tomcat文件夹才将压缩文件解压缩放入，重复了)
+export PATH=$PATH:$CATALINA<span class="token punctuation">_</span></span>HOME/bin</code></pre>
+<p>编辑 /etc/profile文件夹用 <code>vim /etc/profile</code> 打开，编辑完成后 <code>:wq</code>退出，不了解vim的可以学习下，不难的。</p>
+<p><strong>开放端口</strong>：服务器开放端口后，外部才能访问到相关内容。 tomcat默认端口8080，所以需要开放8080端口。下面这个链接过程很清晰 ，不再重复了：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Ferda/p/13305986.html">tomcat的安装，有如何开放端口的流程，步骤清晰，可参考</a></p>
+<p><strong>除了开放8080端口，也可以直接将tomcat的默认8080端口修改为  80</strong>，这样当tomcat运行后，你通过url访问的时候就可以不带 :8080  了，可以通过ip 直接访问。操作方法如下：</p>
+<ol>
+<li><p>进入tomcat 文件夹下的 conf文件夹 ，打开 server.xml文件夹（ <code>vim server.xml</code>）</p>
+</li>
+<li><img src="/2020/12/31/a-li-yun-fu-wu-qi-bu-shu-javaweb-xiang-mu-liu-cheng/image-20201231155654462.png" class="" title="image-20201231155654462">
+
+</li>
+</ol>
+<p>​    将Connector标签中的 port 修改为80， <code>:wq</code>保存退出。</p>
+<h6 id="Web项目部署"><a href="#Web项目部署" class="headerlink" title="Web项目部署"></a>Web项目部署</h6><p><strong>如果要部署JavaWeb项目就要修改 server.xml，部署项目一般都是将war包放在 /usr/local/tomcat/webapps 目录下，然后如果要进行访问的话还需要在server.xml中添加一行，完成后就可以正常访问。（ip:port/path或者ip/path(如果你修改了默认端口)）</strong></p>
+<img src="/2020/12/31/a-li-yun-fu-wu-qi-bu-shu-javaweb-xiang-mu-liu-cheng/image-20201231160551231.png" class="" title="image-20201231160551231">
+
+<pre class=" language-markdown"><code class="language-markdown"><span class="token title important"><span class="token punctuation">#</span>docBase要改成你的项目目录。</span>
+<span class="token title important"><span class="token punctuation">#</span>path为虚拟路径,访问时的路径，注意:不是根目录的，如果是其他路径比如"/test"一定要加"/"" debug建议设置为0</span>
+<span class="token title important"><span class="token punctuation">#</span>reloadable设置为true</span></code></pre>
+<p>添加 Context标签  docBase是 war包的名字（不带.war），path是url中的添加的访问路径，可配置有或没有。</p>
+<p>添加完成，运行tomcat就可以进行访问。</p>
+<h5 id="安装jdk8"><a href="#安装jdk8" class="headerlink" title="安装jdk8"></a>安装jdk8</h5><p>和安装tomcat差不多， 下载，解压，配置环境，即完成。以下链接写的十分详细，流程清晰，可参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/jpfss/p/9677827.html">使用centOS7卸载自带JDK安装自己的JDK8</a></p>
+<h5 id="安装mysql"><a href="#安装mysql" class="headerlink" title="安装mysql"></a>安装mysql</h5><p>忘了，以后遇到再补上。。。。</p>
+<h5 id="安装Redis-并设置远程访问。"><a href="#安装Redis-并设置远程访问。" class="headerlink" title="安装Redis,并设置远程访问。"></a>安装Redis,并设置远程访问。</h5><p><strong>Redis是编译安装</strong>，编译前需要下载一些依赖，像gcc什么的（挺多的），主要流程忘记了，以后遇到再填坑。。。<br>该链接将<strong>如何配置Redis环境变量</strong>和<strong>开放 Redis远程连接</strong>写的还算清楚，可参考（其实主要流程和设置tomcat远程连接类似，环境变量设置都相同）：<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/mowen120/p/11933810.html">redis的安装与连接</a></p>
+<p>Redis设置远程连接其实主要就是<strong>开放端口</strong>和<strong>修改配置</strong>，开放端口上面有，修改配置是：</p>
+<p>先打开**/usr/local/redis** 下的文件   <strong>redis.conf,</strong> 然后修改：</p>
+<ol>
+<li>查找 bind 127.0.0.1  ，找到后注释掉   前面加个#号即可</li>
+<li>搜索 protected-mode 将yes改成no</li>
+<li>搜索 daemonize  修改成yes ,  这个是  是否在后台运行，不影响是否远程连接</li>
+</ol>
+<p><strong>redis可以配置密码</strong> ，搜索# requirepass foobared  ,去掉注释，将foobared修改为自己的密码即可。</p>
+<h3 id="IDEA打包"><a href="#IDEA打包" class="headerlink" title="IDEA打包"></a>IDEA打包</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zeal9s/article/details/90711508">IDEA打包流程</a></p>
+<h3 id="部署到Tomcat"><a href="#部署到Tomcat" class="headerlink" title="部署到Tomcat"></a>部署到Tomcat</h3><p>安装tomcat流程最后讲了如何部署和访问，<a href="Web%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2">Web项目部署</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904052153647111">java项目部署Linux服务器几种启动方式总结经验</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%83%A8%E7%BD%B2JavaWeb%E9%A1%B9%E7%9B%AE/" rel="tag"># 部署JavaWeb项目</a>
+              <a href="/tags/Linux%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" rel="tag"># Linux软件安装</a>
+              <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag"># 环境配置</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/20/editors-vim/" rel="prev" title="Editors(vim)">
+      <i class="fa fa-chevron-left"></i> Editors(vim)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/01/data-wrangling/" rel="next" title="Data Wrangling">
+      Data Wrangling <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%89%80%E9%9C%80%E8%BD%AF%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">安装所需软件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#tomcat%E5%AE%89%E8%A3%85"><span class="nav-number">1.0.1.</span> <span class="nav-text">tomcat安装</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Web%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">Web项目部署</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E8%A3%85jdk8"><span class="nav-number">1.0.2.</span> <span class="nav-text">安装jdk8</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E8%A3%85mysql"><span class="nav-number">1.0.3.</span> <span class="nav-text">安装mysql</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Redis-%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E3%80%82"><span class="nav-number">1.0.4.</span> <span class="nav-text">安装Redis,并设置远程访问。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IDEA%E6%89%93%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">IDEA打包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E5%88%B0Tomcat"><span class="nav-number">3.</span> <span class="nav-text">部署到Tomcat</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="guoyawen"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">guoyawen</p>
+  <div class="site-description" itemprop="description">一个浪费时间的网站</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/trafalgarSX" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;trafalgarSX" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1148636359g@gmail.com" title="E-Mail → mailto:1148636359g@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guoyawen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

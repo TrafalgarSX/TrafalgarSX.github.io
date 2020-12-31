@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"trafalgarsx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="待写">
+  <meta name="description" content="多态 类继承或者接口实现 子类重写父类的方法override 父类的引用指向子类的对象（动态多态，运行期才能知道真正调用的是哪个类的方法）  函数重载是静态多态，编译期就决定是调用哪个方法 争论：我会和面试官说：我认为，多态应该是一种运行期特性，Java中的重写是多态的体现。不过也有人提出重载是一种静态多态的想法，这个问题在StackOverflow等网站上有很多人讨论，但是并没有什么定论。我更加">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java基础(1)">
 <meta property="og:url" content="https://trafalgarsx.github.io/2020/12/08/java-ji-chu-1/index.html">
 <meta property="og:site_name" content="guoBlog">
-<meta property="og:description" content="待写">
+<meta property="og:description" content="多态 类继承或者接口实现 子类重写父类的方法override 父类的引用指向子类的对象（动态多态，运行期才能知道真正调用的是哪个类的方法）  函数重载是静态多态，编译期就决定是调用哪个方法 争论：我会和面试官说：我认为，多态应该是一种运行期特性，Java中的重写是多态的体现。不过也有人提出重载是一种静态多态的想法，这个问题在StackOverflow等网站上有很多人讨论，但是并没有什么定论。我更加">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-12-07T21:49:55.000Z">
 <meta property="article:modified_time" content="2020-12-07T21:49:55.000Z">
@@ -250,7 +250,86 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>待写</p>
+        <h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><ul>
+<li>类继承或者接口实现</li>
+<li>子类重写父类的方法override</li>
+<li>父类的引用指向子类的对象（动态多态，运行期才能知道真正调用的是哪个类的方法）</li>
+</ul>
+<p>函数重载是静态多态，编译期就决定是调用哪个方法</p>
+<p>争论：我会和面试官说：我认为，多态应该是一种运行期特性，Java中的重写是多态的体现。不过也有人提出重载是一种静态多态的想法，这个问题在StackOverflow等网站上有很多人讨论，但是并没有什么定论。我更加倾向于重载不是多态。</p>
+<p><strong>重载（Overloading）</strong>和<strong>重写（Overriding）</strong></p>
+<ol>
+<li><strong>重载</strong>就是函数或者方法有<strong>同样的名称</strong>，但是<strong>参数列表不相同的情形</strong>，这样的同名不同参数的函数或者方法之间，互相称之为重载函数或者方法。</li>
+<li><strong>重写</strong>指的是在<strong>Java的子类与父类中有两个名称、参数列表都相同的方法</strong>的情况。</li>
+</ol>
+<p><strong>重写</strong>遵循所谓“<strong>运行期绑定</strong>”，即在运行的时候，根据引用变量所指向的<strong>实际对象的类型</strong>来调用方法</p>
+<p><strong>重写条件</strong>：</p>
+<ul>
+<li><strong>参数列表</strong>、<strong>返回类型</strong>必须完全<strong>相同</strong></li>
+<li>访问级别的限制性一定不能比被重写方法的强，但可以弱</li>
+<li>重写方法一定<strong>不能抛出新的检查异常</strong>或比被重写的方法声明的检查异常更广泛的检查异常</li>
+<li>不能重写被标示为final的方法；</li>
+</ul>
+<p><strong>构造器</strong>没有<strong>返回类型，不会被继承</strong>，且<strong>可以有范围修饰符。</strong>构造器的函数名称必须和它所属的类的名称相同。</p>
+<h3 id="类变量、成员变量和局部变量"><a href="#类变量、成员变量和局部变量" class="headerlink" title="类变量、成员变量和局部变量"></a>类变量、成员变量和局部变量</h3><p>Java中共<strong>有三种变量，</strong>分别是类变量、成员变量和局部变量。他们分别存放在<strong>JVM的方法区、堆内存和栈内存中</strong>。</p>
+<p>private: 表明该成员变量或者方法是私有的,只有当前类对其具有访问权限,<strong>子类也没有访问权限</strong><br>protected:表明成员变量或者方法对类自身,<strong>与同在一个包中的其他类可见</strong>,其他包下的类不可访问,<strong>除非是他的子类</strong><br>default:表明该成员变量或者方法只有自己和其位于同一个包的内可见,其他包内的类不能访问,<strong>即便是它的子类</strong></p>
+<h3 id="值传递、引用传递"><a href="#值传递、引用传递" class="headerlink" title="值传递、引用传递"></a>值传递、引用传递</h3><p>值传递（pass by value）是指在调用函数时将<strong>实际参数</strong><code>复制</code>一份传递到函数中，这样在函数中如果对<code>参数</code>进行<strong>修改，将不会影响到实际参数</strong>。</p>
+<p>引用传递（pass by reference）是指在调用函数时将<strong>实际参数的地址</strong><code>直接</code>传递到函数中，那么在函数中对<code>参数</code>所进行的<strong>修改，将影响到实际参数。</strong></p>
+<h4 id="Java中只有值传递"><a href="#Java中只有值传递" class="headerlink" title="Java中只有值传递"></a>Java中只有值传递</h4><p>对象共享传递  <strong>Java会将对象的地址的拷贝传递给被调函数的形式参数</strong></p>
+<h3 id="finally与return的关系"><a href="#finally与return的关系" class="headerlink" title="finally与return的关系"></a>finally与return的关系</h3><p>1、不管有没有出现异常，finally块中代码都会执行；<br>2、当try和catch中有return时，finally仍然会执行；<br>3、finally是在return后面的<strong>表达式运算</strong>之后执行的（此时并没有返回运算后的值，而是先把要返回的值保存起来）；</p>
+<p>对于含有return语句的情况下，</p>
+<ul>
+<li><strong>情况一</strong>：如果finally中有return语句，则会将try中的return语句“覆盖”掉，直接执行finally中的return语句，得到返回值，这样便无法得到try之前保留好的返回值。</li>
+<li><strong>情况二</strong>：如果finally中没有return语句，也没有改变要返回值，则执行完finally中的语句后，会接着执行try中的return语句，返回之前保留的值。</li>
+<li><strong>情况三</strong>：如果finally中没有return语句，但是改变了要返回的值，这里有点类似与引用传递和值传递的区别，分以下两种情况：<ul>
+<li>1）如果return的数据是基本数据类型或文本字符串，则在finally中对该基本数据的改变不起作用，try中的return语句依然会返回进入finally块之前保留的值。</li>
+<li>2）如果return的数据是引用数据类型，而在finally中对该引用数据类型的属性值的改变起作用，try中的return语句返回的就是在finally中改变后的该属性的值。</li>
+</ul>
+</li>
+</ul>
+<p><strong>try-catch都有return语句时，没有异常时，返回值是try中的return返回的。</strong></p>
+<p><strong>try块中抛出异常，try、catch和finally中都有return语句，返回值是finally中的return。</strong></p>
+<h3 id="static的各种作用"><a href="#static的各种作用" class="headerlink" title="static的各种作用"></a>static的各种作用</h3><h3 id="构造函数的各种知识"><a href="#构造函数的各种知识" class="headerlink" title="构造函数的各种知识"></a>构造函数的各种知识</h3><h3 id="Java反射的各种知识"><a href="#Java反射的各种知识" class="headerlink" title="Java反射的各种知识"></a>Java反射的各种知识</h3><h3 id="final修饰"><a href="#final修饰" class="headerlink" title="final修饰"></a>final修饰</h3><h5 id="final修饰类"><a href="#final修饰类" class="headerlink" title="final修饰类"></a>final修饰类</h5><p>用final修饰的类不能被继承，即不能拥有自己的子类，否则编译会出错</p>
+<h5 id="final-修饰方法"><a href="#final-修饰方法" class="headerlink" title="final 修饰方法"></a>final 修饰方法</h5><p>final修饰的方法<strong>不能被重写（可以被重载）</strong>。</p>
+<ul>
+<li>因为<strong>重写的前提是子类可以从父类中继承</strong>此方法，如果父类中final修饰的方法同时<strong>访问控制权限为private</strong>，将会导致子类中<strong>不能直接继承</strong>到此方法，因此，此时可以在子类中定义相同的方法名和参数，此时不再产生重写与final的矛盾，而是<strong>在子类中重新定义了新的方法</strong>。</li>
+</ul>
+<h5 id="final修饰变量"><a href="#final修饰变量" class="headerlink" title="final修饰变量"></a>final修饰变量</h5><p>定义了final变量并在首次为其显示初始化后，final修饰的变量值不可被改变。</p>
+<p>final修饰的变量，无论是<strong>类属性</strong>、<strong>对象属性</strong>、<strong>形参</strong>还是<strong>局部变量</strong>，这些变量都是需要进行显示初始化</p>
+<p>对于final修饰的形参，由于是<strong>实参传递</strong>过来的</p>
+<p><strong>final修饰的类属性和变量属性必须要进行显示初始化赋值。</strong></p>
+<p>final变量赋值时刻：</p>
+<ol>
+<li>可以在变量定义时赋值</li>
+<li>可以在代码块中进行赋值（静态代码块和构造代码块）</li>
+<li>在构造方法中赋值</li>
+<li>总之就时在对象创建之前完成赋值的过程</li>
+</ol>
+<p>final成员变量可以在构造函数里赋值</p>
+<h3 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h3><p><strong>switch只支持一种数据类型，那就是整型，其他数据类型都是转换成整型之后再使用switch的</strong></p>
+<p>整形包括 int char short byte   JDK7之后也支持String，支持String是通过 hashCode()方法得到int值然后进行比较，<strong>最后增加 eaquals方法进行比较确认</strong></p>
+<h3 id="字符串常量池"><a href="#字符串常量池" class="headerlink" title="字符串常量池"></a>字符串常量池</h3><p>JVM中，为了减少<strong>相同的字符串的重复创建</strong>，达到节省内存的目的，会单独开辟一块内存，<strong>用于保存字符串常量</strong>，叫做  <strong>字符串常量池</strong>：</p>
+<p>当代码中出现<strong>双引号形式（字面量）创建字符串对象时</strong>，JVM 会<strong>先</strong>对这个字符串进行<strong>检查</strong>，<strong>如果</strong>字符串常量池中<strong>存在相同内容的字符串对象</strong>的引用，则将这个引用返回；<strong>否则</strong>，<strong>创建新的字符串对象</strong>，然后将这个引用放入字符串常量池，并返回该引用。</p>
+<h3 id="Class常量池"><a href="#Class常量池" class="headerlink" title="Class常量池"></a>Class常量池</h3><p>Class常量池可以理解为是<strong>Class文件中的资源仓库</strong>。</p>
+<p>Class文件中除了包含<strong>类的版本、字段、方法、接口等描述信息外</strong>，还有一项信息就是<strong>常量池</strong>(constant pool table)，用于<strong>存放编译器生成的各种字面量(Literal)和符号引用(Symbolic References)。</strong></p>
+<blockquote>
+<p>在计算机科学中，<strong>字面量（literal）</strong>是用于表达源代码中一个<strong>固定值的表示法</strong>（notation）。几乎所有计算机编程语言都具有对基本值的字面量表示，诸如：整数、浮点数以及字符串；而有很多也对布尔类型和字符类型的值也支持字面量表示；还有一些甚至对枚举类型的元素以及像数组、记录和对象等复合类型的值也支持字面量表示法。</p>
+</blockquote>
+<blockquote>
+<p>符号引用是编译原理中的概念，是相对于直接引用来说的。主要包括了以下三类常量： * <strong>类和接口的全限定名</strong> * <strong>字段的名称和描述符</strong> * <strong>方法的名称和描述符</strong></p>
+</blockquote>
+<ul>
+<li>Class是用来保存常量的一个媒介场所，并且是一个中间场所。在JVM真的运行时，需要把常量池中的常量加载到内存中。</li>
+</ul>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>运行时常量池（ Runtime Constant Pool）是<strong>每一个类或接口的常量池（ Constant_Pool）的运行时表示形式。</strong></p>
+<p>包括了若干种不同的常量：从编译期可知的<strong>数值字面量</strong>到必须运行期解析后才能获得的<strong>方法或字段引用。</strong></p>
+<p>运行时常量池扮演了<strong>类似传统语言中符号表（ SymbolTable）的角色</strong>，不过它存储数据范围比通常意义上的符号表要更为广泛。</p>
+<p><strong>每一个运行时常量池</strong>都分配在 Java 虚拟机的<strong>方法区</strong>之中，在<strong>类和接口被加载到虚拟机后</strong>，对应的运行时常量池就<strong>被创建出来</strong>。</p>
+<p>运行时常量池中的内容包含：<strong>Class常量池中的常量、字符串常量池中的内容</strong></p>
+<p><strong>包括了前面的两个常量池</strong></p>
+<p><strong>字符串常量的长度不能超过65535。</strong></p>
+<p>字符串有长度限制，<strong>在编译期</strong>，要求字符串常量池中的常量不能超过65535，并且在javac执行过程中控制了最大值为65534。</p>
+<p><strong>在运行期</strong>，长度不能超过Int的范围，否则会抛异常。</p>
 
     </div>
 
@@ -272,7 +351,10 @@
     <a href="/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/" rel="prev" title="spring注释/xml配置开发区别">
       <i class="fa fa-chevron-left"></i> spring注释/xml配置开发区别
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/18/ke-cheng-gai-lan-he-shell/" rel="next" title="课程概览和shell">
+      课程概览和shell <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -331,6 +413,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E6%80%81"><span class="nav-number">1.</span> <span class="nav-text">多态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%8F%98%E9%87%8F%E3%80%81%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%92%8C%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="nav-number">2.</span> <span class="nav-text">类变量、成员变量和局部变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%BC%E4%BC%A0%E9%80%92%E3%80%81%E5%BC%95%E7%94%A8%E4%BC%A0%E9%80%92"><span class="nav-number">3.</span> <span class="nav-text">值传递、引用传递</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Java%E4%B8%AD%E5%8F%AA%E6%9C%89%E5%80%BC%E4%BC%A0%E9%80%92"><span class="nav-number">3.1.</span> <span class="nav-text">Java中只有值传递</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#finally%E4%B8%8Ereturn%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">4.</span> <span class="nav-text">finally与return的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#static%E7%9A%84%E5%90%84%E7%A7%8D%E4%BD%9C%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">static的各种作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%90%84%E7%A7%8D%E7%9F%A5%E8%AF%86"><span class="nav-number">6.</span> <span class="nav-text">构造函数的各种知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E5%8F%8D%E5%B0%84%E7%9A%84%E5%90%84%E7%A7%8D%E7%9F%A5%E8%AF%86"><span class="nav-number">7.</span> <span class="nav-text">Java反射的各种知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#final%E4%BF%AE%E9%A5%B0"><span class="nav-number">8.</span> <span class="nav-text">final修饰</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#final%E4%BF%AE%E9%A5%B0%E7%B1%BB"><span class="nav-number">8.0.1.</span> <span class="nav-text">final修饰类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#final-%E4%BF%AE%E9%A5%B0%E6%96%B9%E6%B3%95"><span class="nav-number">8.0.2.</span> <span class="nav-text">final 修饰方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#final%E4%BF%AE%E9%A5%B0%E5%8F%98%E9%87%8F"><span class="nav-number">8.0.3.</span> <span class="nav-text">final修饰变量</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#switch"><span class="nav-number">9.</span> <span class="nav-text">switch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="nav-number">10.</span> <span class="nav-text">字符串常量池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Class%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="nav-number">11.</span> <span class="nav-text">Class常量池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="nav-number">12.</span> <span class="nav-text">运行时常量池</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -346,20 +429,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

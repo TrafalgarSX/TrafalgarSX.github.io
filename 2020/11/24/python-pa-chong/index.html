@@ -27,14 +27,14 @@
 <meta property="og:site_name" content="guoBlog">
 <meta property="og:description" content="正则表达式模块re模块 引号中转义字符需要倒斜杠， 如果使用*原始字符串**就很方便，python中可以在字符串的第一个引号之前加上r***，就可以将该字符串标记为原始字符串，不包括转移字符。 re.compiler 编译方法，参数: arg1 正则表达式，返回一个 Regex对象 Regex对象的search 方法查找传入的字符串，寻找该正则表达式的所有匹配，如果没有匹配，返回None,若找到s">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://trafalgarsx.github.io/.io//image-20201124235648626.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/2020/11/24/python-pa-chong/image-20201124235648626.png">
 <meta property="article:published_time" content="2020-11-23T23:38:50.000Z">
 <meta property="article:modified_time" content="2020-11-23T23:38:50.000Z">
 <meta property="article:author" content="guoyawen">
 <meta property="article:tag" content="Python">
 <meta property="article:tag" content="爬虫">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://trafalgarsx.github.io/.io//image-20201124235648626.png">
+<meta name="twitter:image" content="https://trafalgarsx.github.io/2020/11/24/python-pa-chong/image-20201124235648626.png">
 
 <link rel="canonical" href="https://trafalgarsx.github.io/2020/11/24/python-pa-chong/">
 
@@ -268,7 +268,8 @@
 <p>利用<strong>findall()**方法，可以找到 所有 匹配的地方。</strong>返回一组字符串**，包含所有被查找字符串的所有匹配。</p>
 <p><strong>findall()</strong> 返回的不是一个Match对象，而是一个 <strong>字符串列表</strong></p>
 <p>如果在正则表达式 中<strong>有分组</strong>，那么 findall将返回<strong>元组的列表</strong>（只会返回 分组内的内容 不在分组中的不反回）。  每一元组表示一个找到的匹配</p>
-<p><img src="/.io//image-20201124235648626.png" alt="image-20201124235648626"></p>
+<img src="/2020/11/24/python-pa-chong/image-20201124235648626.png" class="" title="image-20201124235648626">
+
 <h5 id="贪婪匹配"><a href="#贪婪匹配" class="headerlink" title="贪婪匹配"></a>贪婪匹配</h5><p>Python的正则表达式默认是“贪心”的，这表示在<strong>有二义的情况下</strong>，会尽可能<strong>匹配最长的字符串</strong></p>
 <h5 id="非贪婪匹配"><a href="#非贪婪匹配" class="headerlink" title="非贪婪匹配"></a>非贪婪匹配</h5><p>花括号的“非贪婪” 匹配是 <strong>匹配最短的字符串</strong>， 在 <strong><em>结束的花括号后面</em></strong> 跟着一个 问号。{n,m}？</p>
 <p><strong><em>在方框内 [] (自己的字符分类),普通的正则表达式符号不会被解释， 即不需要加上 转义符号/</em></strong></p>
@@ -387,20 +388,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
