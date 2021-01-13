@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trafalgarsx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="[TOC]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python列表元组字典">
+<meta property="og:url" content="https://trafalgarsx.github.io/2021/01/14/python-lie-biao-yuan-zu-zi-dian/index.html">
+<meta property="og:site_name" content="guoBlog">
+<meta property="og:description" content="[TOC]">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://trafalgarsx.github.io/2021/01/14/python-lie-biao-yuan-zu-zi-dian/image-20210113224149880.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/2021/01/14/python-lie-biao-yuan-zu-zi-dian/image-20210113223944152.png">
+<meta property="article:published_time" content="2021-01-13T22:04:56.000Z">
+<meta property="article:modified_time" content="2021-01-13T22:04:56.000Z">
+<meta property="article:author" content="guoyawen">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://trafalgarsx.github.io/2021/01/14/python-lie-biao-yuan-zu-zi-dian/image-20210113224149880.png">
+
+<link rel="canonical" href="https://trafalgarsx.github.io/2021/01/14/python-lie-biao-yuan-zu-zi-dian/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>python列表元组字典 | guoBlog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">guoBlog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">哈哈，他妈了个逼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2021/01/14/python-lie-biao-yuan-zu-zi-dian/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          python列表元组字典
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-13 22:04:56" itemprop="dateCreated datePublished" datetime="2021-01-13T22:04:56Z">2021-01-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">python基础</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>[TOC]</p>
+<a id="more"></a>
+
+<h4 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h4><p><strong>“列表”是一个值</strong>，它包含多个字构成的序列。<br><strong>术语“列表值”指的是列表本身</strong>（它作为一个值，可以保存在变量中，或传递给函数，像所有其他值一样），而不是指列表值之内的那些值</p>
+<p>列表值看起来像这样：[‘cat’, ‘bat’, ‘rat’, ‘elephant’]    方框</p>
+<ul>
+<li><p>用<strong>下标</strong>取得列表中的单个值假定列表[‘cat’, ‘bat’, ‘rat’, ‘elephant’]  0 1 2 3</p>
+</li>
+<li><p>可以是二维的</p>
+</li>
+<li><p>负数下标，。整数值−1 指的是列表中的最后一个下标，−2 指的是列表中倒数第二个下标，以此类推</p>
+</li>
+<li><p>利用切片取得子列表，spam[1:4]是一个列表和切片（两个整数）。</p>
+<blockquote>
+<p>在一个切片中，第一个整数是切片开始处的下标。<strong>第二个整数是切片结束处的下标</strong>。切片向上增长，直至第二个下标的值，<strong>但不包括它</strong>。</p>
+<p>作为快捷方法，你可以省略切片中冒号两边的一个下标或两个下标。省略第一个下标相当于使用0，或列表的开始。省略第二个下标相当于使用列表的长度，意味着分片直至列表的末尾。</p>
+</blockquote>
+</li>
+<li><p>用len()取得列表的长度</p>
+</li>
+<li><p>用下标改变列表中的值 spam[1]=’cat’</p>
+</li>
+<li><p>列表连接和列表复制</p>
+<blockquote>
+<p>+操作符可以连接两个列表，得到一个新列表<br>*操作符可以用于一个列表和一个整数，实现列表的复制</p>
+</blockquote>
+</li>
+<li><p>用del 语句从列表中删除值  </p>
+<blockquote>
+<p>del spam[2]<br>del 语句也可用于一个简单变量，删除它，作用就像是“取消赋值”语句。如果在删除之后试图使用该变量，就会遇到NameError 错误，因为该变量已不再存在。<br><strong>del 语句几乎总是用于删除列表中的值。</strong></p>
+</blockquote>
+</li>
+<li><p>in 和not in 操作符   cat in [‘cat’,’dog’]</p>
+</li>
+<li><p>多重赋值技巧</p>
+</li>
+</ul>
+<img src="/2021/01/14/python-lie-biao-yuan-zu-zi-dian/image-20210113224149880.png" class="" title="image-20210113224149880">
+
+<ul>
+<li><p>用index()方法在列表中查找值</p>
+<blockquote>
+<p>spam.index(‘hello’)<br>列表值有一个index()方法，可以传入一个值，如果该值存在于列表中，就返回它的下标。如果该值不在列表中，Python 就报ValueError。</p>
+</blockquote>
+</li>
+<li><p>用append()和insert()方法在列表中添加值</p>
+<blockquote>
+<p>spam.append(‘moose’)<br>spam.insert(1, ‘chicken’) 第一个参数是Index</p>
+</blockquote>
+</li>
+<li><p>用remove()方法从列表中删除值</p>
+<blockquote>
+<p>spam.remove(‘bat’)</p>
+</blockquote>
+</li>
+<li><p>用sort()方法将列表中的值排序</p>
+<blockquote>
+<p>不能对既有数字又有字符串值的列表排序，因为Python 不知道如何比较它们。<br>spam = [1, 3, 2, 4, ‘Alice’, ‘Bob’]<br>sort()方法对字符串排序时，使用“ASCII 字符顺序”，而不是实际的字典顺序。这意味着大写字母排在小写字母之前。因此在排序时，小写的a 在大写的Z 之后。</p>
+</blockquote>
+</li>
+</ul>
+<img src="/2021/01/14/python-lie-biao-yuan-zu-zi-dian/image-20210113223944152.png" class="" title="image-20210113223944152">
+
+<ul>
+<li><p>对列表的许多操作，也可以作用于<strong>字符串</strong>：按下标取值、切片、用于for 循环、用于len()，以及用于in 和not in 操作符。</p>
+</li>
+<li><p><strong>列表和字符串在一个重要的方面是不同的</strong>。<strong>列表是“可变的”数据类型</strong>，它的值可以添加、删除或改变。但是，<strong>字符串是“不可变的”</strong>，它不能被更改。</p>
+</li>
+</ul>
+<h4 id="元组"><a href="#元组" class="headerlink" title="元组"></a>元组</h4><p>除了两个方面，“元组”数据类型几乎与列表数据类型一样。</p>
+<ul>
+<li>首先，元组输入Python 编程快速上手——让繁琐工作自动化时用圆括号()，而不是用方括号[]。</li>
+<li>元组像字符串一样，是不可变的。元组不能让它们的值被修改、添加或删除。</li>
+</ul>
+<p><strong>如果元组中只有一个值</strong>，你可以在括号内该值的后面跟上一个逗号，表明这种情况。否则，Python 将认为，你只是在一个普通括号内输入了一个值。逗号告诉Python，这是一个元组</p>
+<h5 id="用list-和tuple-函数来转换类型"><a href="#用list-和tuple-函数来转换类型" class="headerlink" title="用list()和tuple()函数来转换类型"></a>用list()和tuple()函数来转换类型</h5><p>函数list()和tuple()将返回传递给它们的值的列表和元组版本。</p>
+<pre class=" language-python"><code class="language-python">tuple<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'cat'</span><span class="token punctuation">,</span> <span class="token string">'dog'</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span><span class="token string">'cat'</span><span class="token punctuation">,</span> <span class="token string">'dog'</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span>
+list<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token string">'cat'</span><span class="token punctuation">,</span> <span class="token string">'dog'</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">[</span><span class="token string">'cat'</span><span class="token punctuation">,</span> <span class="token string">'dog'</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span>
+list<span class="token punctuation">(</span><span class="token string">'hello'</span><span class="token punctuation">)</span>
+<span class="token punctuation">[</span><span class="token string">'h'</span><span class="token punctuation">,</span> <span class="token string">'e'</span><span class="token punctuation">,</span> <span class="token string">'l'</span><span class="token punctuation">,</span> <span class="token string">'l'</span><span class="token punctuation">,</span> <span class="token string">'o'</span><span class="token punctuation">]</span></code></pre>
+<h5 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h5><p>你将42 赋给spam 变量，然后拷贝spam 中的值，将它赋给变量cheese。当稍后将spam中的值改变为100 时，这不会影响cheese 中的值。这是因为spam和cheese是不同的变量，保存了不同的值。</p>
+<p><strong>但是，列表不是这样的</strong>，当你将列表赋给一个变量时，实际上是将列表的“引用”赋给了该变量。引用是一个值，指向某些数据。列表引用是指向一个列表的值。<br><strong>列表变量实际上没有包含列表</strong>，而是包含了对列表的“引用”（这些引用包含一些ID 数字，Python 在内部使用这些ID，但是你可以忽略）。</p>
+<h5 id="传递引用"><a href="#传递引用" class="headerlink" title="传递引用"></a>传递引用</h5><p>要理解参数如何传递给函数，引用就特别重要。当函数被调用时，<strong>参数的值被复制给变元</strong>。<strong>对于列表（以及字典</strong>，我将在下一章中讨论），这意味着<strong>变元得到的是引用的拷贝</strong>。</p>
+<ul>
+<li><p>copy 模块的copy()和deepcopy()函数</p>
+<blockquote>
+<p>cheese = copy.copy(spam)<br>如果要复制的列表中包含了列表，那就使用copy.deepcopy()函数来代替。<br>Python 编程快速上手——让繁琐工作自动化deepcopy()函数将同时复制它们内部的列表。</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h4><p><strong>像列表一样</strong>，“字典”是许多值的集合。但不像列表的下标，<strong>字典的索引可以使用许多不同数据类型</strong>，不只是整数。<strong>字典的索引被称为“键”</strong>，键及其关联的值称为“键-值”对。</p>
+<p>字典输入时带花括号{}</p>
+<blockquote>
+<p>spam = {12345: ‘Luggage Combination’, 42: ‘The Answer’}</p>
+</blockquote>
+<h5 id="字典与列表"><a href="#字典与列表" class="headerlink" title="字典与列表"></a>字典与列表</h5><p><strong>不像列表，字典中的表项是不排序的</strong>。名为spam 的列表中，第一个表项是spam[0]。但字典中没有“第一个”表项。虽然确定两个列表是否相同时，表项的顺序很重要，<strong>但在字典中，键-值对输入的顺序并不重要。</strong></p>
+<p>两个字典 键值对相同，顺序不同，最后两个字典相同</p>
+<ul>
+<li><p>keys()、values()和items()方法,分别对应于字典的键、值和键-值对</p>
+<pre class=" language-python"><code class="language-python"><span class="token keyword">for</span> v <span class="token keyword">in</span> spam<span class="token punctuation">.</span>values<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span>
+<span class="token keyword">for</span> k <span class="token keyword">in</span> spam<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>k<span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> spam<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+<span class="token punctuation">(</span><span class="token string">'color'</span><span class="token punctuation">,</span> <span class="token string">'red'</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span><span class="token string">'age'</span><span class="token punctuation">,</span> <span class="token number">42</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#多重赋值</span>
+<span class="token keyword">for</span> k<span class="token punctuation">,</span> v <span class="token keyword">in</span> spam<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Key: '</span> <span class="token operator">+</span> k <span class="token operator">+</span> <span class="token string">' Value: '</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+</li>
+</ul>
+<p>list(spam.keys())代码行接受keys()函数返回的dict_keys 值，并传递给list()。然后返回一个列表，即[‘color’, ‘age’]。</p>
+<ul>
+<li><p>检查字典中是否存在键或值   in,  not in</p>
+</li>
+<li><p>get()方法 字典有一个get()方法，它有两个参数：要取得其值的键，以及如果该键不存在时，返回的备用值。<strong>第二个参数是备用值</strong></p>
+</li>
+<li><p>setdefault()方法 你常常需要为字典中<strong>某个键设置一个默认值</strong>，当该键没有任何值时使用它。</p>
+<blockquote>
+<p>传递给该方法的第一个参数，是要检查的键。第二个参数，是如果该键不存在时要设置的值。如果该键确实存在，方法就会返回键的值</p>
+</blockquote>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/14/python-han-shu/" rel="prev" title="python函数">
+      <i class="fa fa-chevron-left"></i> python函数
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%97%E8%A1%A8"><span class="nav-number">1.</span> <span class="nav-text">列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%83%E7%BB%84"><span class="nav-number">2.</span> <span class="nav-text">元组</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8list-%E5%92%8Ctuple-%E5%87%BD%E6%95%B0%E6%9D%A5%E8%BD%AC%E6%8D%A2%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.1.</span> <span class="nav-text">用list()和tuple()函数来转换类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BC%A0%E9%80%92%E5%BC%95%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">传递引用</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E5%85%B8"><span class="nav-number">3.</span> <span class="nav-text">字典</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AD%97%E5%85%B8%E4%B8%8E%E5%88%97%E8%A1%A8"><span class="nav-number">3.1.</span> <span class="nav-text">字典与列表</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="guoyawen"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">guoyawen</p>
+  <div class="site-description" itemprop="description">一个浪费时间的网站</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/trafalgarSX" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;trafalgarSX" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1148636359g@gmail.com" title="E-Mail → mailto:1148636359g@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guoyawen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

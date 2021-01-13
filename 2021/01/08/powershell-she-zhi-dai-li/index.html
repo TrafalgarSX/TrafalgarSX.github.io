@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trafalgarsx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="配置PowerShell命令行PowerShell中有些情况需要使用代理，比如在PowerShell下使用git clone命令。 我们需要将这两个命令写入powershell启动脚本（类似linux的.bashrc），windows启动脚本在哪儿？ [PowerShell的启动脚本在哪儿？](### PowerShell启动脚本) function set_proxy_variable {">
+<meta property="og:type" content="article">
+<meta property="og:title" content="powershell设置代理">
+<meta property="og:url" content="https://trafalgarsx.github.io/2021/01/08/powershell-she-zhi-dai-li/index.html">
+<meta property="og:site_name" content="guoBlog">
+<meta property="og:description" content="配置PowerShell命令行PowerShell中有些情况需要使用代理，比如在PowerShell下使用git clone命令。 我们需要将这两个命令写入powershell启动脚本（类似linux的.bashrc），windows启动脚本在哪儿？ [PowerShell的启动脚本在哪儿？](### PowerShell启动脚本) function set_proxy_variable {">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-07T21:50:15.000Z">
+<meta property="article:modified_time" content="2021-01-07T21:50:15.000Z">
+<meta property="article:author" content="guoyawen">
+<meta property="article:tag" content="PowerShell">
+<meta property="article:tag" content="代理配置">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://trafalgarsx.github.io/2021/01/08/powershell-she-zhi-dai-li/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>powershell设置代理 | guoBlog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">guoBlog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">哈哈，他妈了个逼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2021/01/08/powershell-she-zhi-dai-li/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          powershell设置代理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-07 21:50:15" itemprop="dateCreated datePublished" datetime="2021-01-07T21:50:15Z">2021-01-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%85%8D%E7%BD%AE/" itemprop="url" rel="index"><span itemprop="name">配置</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="配置PowerShell命令行"><a href="#配置PowerShell命令行" class="headerlink" title="配置PowerShell命令行"></a>配置PowerShell命令行</h3><p>PowerShell中有些情况需要使用代理，比如在PowerShell下使用git clone命令。</p>
+<p>我们需要将这两个命令写入powershell启动脚本（类似linux的<code>.bashrc</code>），windows启动脚本在哪儿？</p>
+<p>[PowerShell的启动脚本在哪儿？](### PowerShell启动脚本)</p>
+<pre class=" language-powershell"><code class="language-powershell"><span class="token keyword">function</span> set_proxy_variable <span class="token punctuation">{</span>
+    <span class="token function">Set-Item</span> Env:http_proxy <span class="token string">"http://127.0.0.1:1080"</span>  <span class="token comment" spellcheck="true"># 代理地址</span>
+    <span class="token function">Set-Item</span> Env:https_proxy <span class="token string">"http://127.0.0.1:1080"</span> <span class="token comment" spellcheck="true"># 代理地址</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> unset_proxy_variable <span class="token punctuation">{</span>
+    <span class="token function">Remove-Item</span> Env:http_proxy
+    <span class="token function">Remove-Item</span> Env:https_proxy
+<span class="token punctuation">}</span>
+
+<span class="token function">New-Alias</span> <span class="token operator">-</span>Name spp <span class="token operator">-</span>Value set_proxy_variable
+<span class="token function">New-Alias</span> <span class="token operator">-</span>Name upp <span class="token operator">-</span>Value unset_proxy_variable</code></pre>
+<h5 id="报错"><a href="#报错" class="headerlink" title="报错"></a>报错</h5><p>如果打开新的poewrshell窗口报<code>此系统上禁止运行脚本</code>错误，需要设置运行策略。</p>
+<pre class=" language-powershell"><code class="language-powershell"><span class="token function">Set</span><span class="token operator">-</span>ExecutionPolicy <span class="token operator">-</span>ExecutionPolicy RemoteSigned <span class="token operator">-</span>Scope CurrentUser</code></pre>
+<h5 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h5><ul>
+<li><code>spp</code> 启用代理</li>
+<li><code>upp</code> 取消代理</li>
+</ul>
+<h3 id="PowerShell启动脚本"><a href="#PowerShell启动脚本" class="headerlink" title="PowerShell启动脚本"></a>PowerShell启动脚本</h3><p>Linux中bash有一个启动的默认配置文件：<code>.bashrc</code>或者<code>.bash_profile</code>，自定义命令以及预配置可以写在那里，但是windows的配置文件在哪里呢？</p>
+<p>windows 10 1903版本上的配置文件的实际路径</p>
+<table>
+<thead>
+<tr>
+<th align="left">Description</th>
+<th align="left">Path</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">All Users, All Hosts</td>
+<td align="left"><code>$PsHome\profile.ps1</code></td>
+</tr>
+<tr>
+<td align="left">All Users, Current Host</td>
+<td align="left"><code>$PsHome\Microsoft.PowerShell_profile.ps1</code></td>
+</tr>
+<tr>
+<td align="left">Current User, All Hosts</td>
+<td align="left"><code>$Home\Documents\WindowsPowerShell\profile.ps1</code></td>
+</tr>
+<tr>
+<td align="left">Current user, Current Host</td>
+<td align="left"><code>$Home\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</code></td>
+</tr>
+</tbody></table>
+<p>然后就是按照路径创建配置文件，终于可以写点自定义命令了。</p>
+<p>以下几种方法应该也可以，但我没有试过，以后有机会再说。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.niekun.net/archives/97.html">powershell设置代理一种方法</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.jsmvp.com/post/2020/03/06/how-to-set-the-HTTP-proxy-for-cmdpowershell">第二种方法</a></p>
+<p><a target="_blank" rel="noopener" href="https://async.sh/2018/07/30/quick-setup-http-proxy-using-powershell-profile/">第三种方法</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PowerShell/" rel="tag"># PowerShell</a>
+              <a href="/tags/%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE/" rel="tag"># 代理配置</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/01/data-wrangling/" rel="prev" title="Data Wrangling">
+      <i class="fa fa-chevron-left"></i> Data Wrangling
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/" rel="next" title="LaTex的安装与配置">
+      LaTex的安装与配置 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEPowerShell%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="nav-number">1.</span> <span class="nav-text">配置PowerShell命令行</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8A%A5%E9%94%99"><span class="nav-number">1.0.1.</span> <span class="nav-text">报错</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">1.0.2.</span> <span class="nav-text">使用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PowerShell%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC"><span class="nav-number">2.</span> <span class="nav-text">PowerShell启动脚本</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="guoyawen"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">guoyawen</p>
+  <div class="site-description" itemprop="description">一个浪费时间的网站</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/trafalgarSX" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;trafalgarSX" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1148636359g@gmail.com" title="E-Mail → mailto:1148636359g@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guoyawen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

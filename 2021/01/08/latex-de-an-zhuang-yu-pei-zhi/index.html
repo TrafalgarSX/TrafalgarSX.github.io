@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trafalgarsx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="TexLive的安装官网下载TexLive官网  可以通过install-tl-windows.exe下载安装，但是好像太慢，普遍不用 可以点击下方有个    other installation methods  链接进入，点击 Downloading one huge ISO file ，有代理的话 点击 download from a nearby CTAN mirror ，或者到下方的 m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LaTex的安装与配置">
+<meta property="og:url" content="https://trafalgarsx.github.io/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/index.html">
+<meta property="og:site_name" content="guoBlog">
+<meta property="og:description" content="TexLive的安装官网下载TexLive官网  可以通过install-tl-windows.exe下载安装，但是好像太慢，普遍不用 可以点击下方有个    other installation methods  链接进入，点击 Downloading one huge ISO file ，有代理的话 点击 download from a nearby CTAN mirror ，或者到下方的 m">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://trafalgarsx.github.io/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/image-20210107221903931.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/image-20210107222327376.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/image-20210107222400190.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/image-20210107222417612.png">
+<meta property="og:image" content="https://trafalgarsx.github.io/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/v2-d8c189c37f4fc4e76b6da55c7d314f0e_720w.jpg">
+<meta property="og:image" content="https://trafalgarsx.github.io/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/image-20210107223057127.png">
+<meta property="article:published_time" content="2021-01-07T21:50:37.000Z">
+<meta property="article:modified_time" content="2021-01-07T21:50:37.000Z">
+<meta property="article:author" content="guoyawen">
+<meta property="article:tag" content="LaTex">
+<meta property="article:tag" content="Neovim">
+<meta property="article:tag" content="vsCode">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://trafalgarsx.github.io/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/image-20210107221903931.png">
+
+<link rel="canonical" href="https://trafalgarsx.github.io/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LaTex的安装与配置 | guoBlog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">guoBlog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">哈哈，他妈了个逼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LaTex的安装与配置
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-07 21:50:37" itemprop="dateCreated datePublished" datetime="2021-01-07T21:50:37Z">2021-01-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%85%8D%E7%BD%AE/" itemprop="url" rel="index"><span itemprop="name">配置</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="TexLive的安装"><a href="#TexLive的安装" class="headerlink" title="TexLive的安装"></a>TexLive的安装</h3><h5 id="官网下载"><a href="#官网下载" class="headerlink" title="官网下载"></a>官网下载</h5><p><a target="_blank" rel="noopener" href="https://www.tug.org/texlive/acquire-netinstall.html">TexLive官网</a></p>
+<ul>
+<li>可以通过install-tl-windows.exe下载安装，但是好像太慢，普遍不用</li>
+<li>可以点击下方有个    <a target="_blank" rel="noopener" href="https://www.tug.org/texlive/acquire.html">other installation methods</a>  链接进入，点击 <a target="_blank" rel="noopener" href="https://www.tug.org/texlive/acquire-iso.html">Downloading one huge ISO file</a> ，有代理的话 点击 <a target="_blank" rel="noopener" href="http://mirror.ctan.org/systems/texlive/Images/">download from a nearby CTAN mirror</a> ，或者到下方的 <a target="_blank" rel="noopener" href="http://ctan.org/mirrors">mirror list</a> 找一个离自己近的镜像，比如下面有Asia分区里的中国分区，里面有清华、北大的一些镜像。比如清华的镜像中，首页有个CTAN，点击进入，往上寻找 systems下有个 Tex Live,点击进入再点击Images。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/">清华大学的Tex Live镜像</a></p>
+<img src="/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/image-20210107221903931.png" class="" title="image-20210107221903931">
+
+<p>下载图中红框里的文件即可。</p>
+<a id="more"></a>
+
+<p><code>texlive2020-20200406.iso</code> 是目前从官方磁力链接下载到的文件。里面有 <code>install-tl-windows.bat</code> 和 <code>install-tl-advanced.bat</code> 这两个脚本（或称<code>批处理文件</code>），双击其中任何一个都可以在 Windows 上自动安装，其中前者可以配置安装位置与安装后的默认选项，在这里我推荐任何人都用 <code>install-tl-windows.bat</code> 进行安装。</p>
+<p>1.点击<code>texlive2020.iso</code>，如果是<code>win10</code>系统，双击打开即可，然后双击打开其中的<code>install-tl-windows.bat</code></p>
+<p>2.可修改安装路径，一般默认<code>C</code>盘，如果你空间不够可考虑其它盘，其它设置可点击左下角 <code>Advanced</code>.</p>
+<img src="/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/image-20210107222327376.png" class="" title="image-20210107222327376">
+
+<p>3.等待半个多小时，安装完成。</p>
+<img src="/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/image-20210107222400190.png" class="" title="image-20210107222400190">
+
+<img src="/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/image-20210107222417612.png" class="" title="image-20210107222417612">
+
+<h3 id="TexLive在VSCode中的配置"><a href="#TexLive在VSCode中的配置" class="headerlink" title="TexLive在VSCode中的配置"></a>TexLive在VSCode中的配置</h3><p>编辑LaTex的IDE可以使用tex studio或者winEdit,但是有VSCode这个很强的文本编辑器，我就没有使用前面两个。</p>
+<p>在VSCode插件市场内中搜索并安装 LaTex Workshop。</p>
+<p>配置VSCode的settings.json</p>
+<p>第一步，打开你的 VSCode 默认配置文件：<code>Ctrl</code> + <code>Shift</code> + <code>P</code>，输入 <code>default settings.json</code>，如下图：</p>
+<img src="/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/v2-d8c189c37f4fc4e76b6da55c7d314f0e_720w.jpg" class="" title="img">
+
+<p>将下面代码复制进入 settings.json文件中</p>
+<pre class=" language-js"><code class="language-js">    <span class="token comment" spellcheck="true">// ======================== LaTeX 设置 BEGIN  ========================</span>
+    <span class="token comment" spellcheck="true">// bibtex 格式</span>
+    <span class="token string">"latex-workshop.bibtex-format.tab"</span><span class="token punctuation">:</span> <span class="token string">"tab"</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 自动编译，全部关闭，当且仅当你认为有需要的时候才会去做编译</span>
+    <span class="token string">"latex-workshop.latex.autoBuild.run"</span><span class="token punctuation">:</span> <span class="token string">"never"</span><span class="token punctuation">,</span>
+    <span class="token string">"latex-workshop.latex.autoBuild.cleanAndRetry.enabled"</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 设置 latex-workshop 的 PDF　预览程序，external　指的是外部程序</span>
+    <span class="token comment" spellcheck="true">//这里我使用的Pdf预览程序市acrobat，你可以下载SumatraPDF代替</span>
+    <span class="token string">"latex-workshop.view.pdf.viewer"</span><span class="token punctuation">:</span> <span class="token string">"external"</span><span class="token punctuation">,</span>
+    <span class="token string">"latex-workshop.view.pdf.ref.viewer"</span><span class="token punctuation">:</span> <span class="token string">"external"</span><span class="token punctuation">,</span>
+    <span class="token string">"latex-workshop.view.pdf.external.viewer.command"</span><span class="token punctuation">:</span> <span class="token string">"D:/AcrobatDC/Acrobat/Acrobat.exe"</span><span class="token punctuation">,</span>
+    <span class="token string">"latex-workshop.view.pdf.external.viewer.args"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string">"%PDF%"</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 配置正向、反向搜索：.tex -> .pdf</span>
+    <span class="token string">"latex-workshop.view.pdf.external.synctex.command"</span><span class="token punctuation">:</span> <span class="token string">"D:/AcrobatDC/Acrobat/Acrobat.exe"</span><span class="token punctuation">,</span>
+    <span class="token string">"latex-workshop.view.pdf.external.synctex.args"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token comment" spellcheck="true">// 正向搜索</span>
+        <span class="token string">"-forward-search"</span><span class="token punctuation">,</span>
+        <span class="token string">"%TEX%"</span><span class="token punctuation">,</span>
+        <span class="token string">"%LINE%"</span><span class="token punctuation">,</span>
+        <span class="token string">"-reuse-instance"</span><span class="token punctuation">,</span>
+        <span class="token comment" spellcheck="true">// 反向搜索</span>
+        <span class="token string">"-inverse-search"</span><span class="token punctuation">,</span>
+        <span class="token string">"\"D:/VScode/Microsoft VS Code/Code.exe\" \"D:/VScode/Microsoft VS Code/resources/app/out/cli.js\" -gr %f:%l"</span><span class="token punctuation">,</span>
+        <span class="token string">"%PDF%"</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 这是一些独立的编译选项，可以作为工具被编译方案调用</span>
+    <span class="token string">"latex-workshop.latex.tools"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// Windows 原生安装 TeX Live 2020 的编译选项</span>
+            <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"xelatex"</span><span class="token punctuation">,</span>
+            <span class="token string">"command"</span><span class="token punctuation">:</span> <span class="token string">"xelatex"</span><span class="token punctuation">,</span>
+            <span class="token string">"args"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+                <span class="token string">"-synctex=1"</span><span class="token punctuation">,</span>
+                <span class="token string">"-interaction=nonstopmode"</span><span class="token punctuation">,</span>
+                <span class="token string">"-file-line-error"</span><span class="token punctuation">,</span>
+                <span class="token string">"-pdf"</span><span class="token punctuation">,</span>
+                <span class="token string">"%DOCFILE%"</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+            <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"pdflatex"</span><span class="token punctuation">,</span>
+            <span class="token string">"command"</span><span class="token punctuation">:</span> <span class="token string">"pdflatex"</span><span class="token punctuation">,</span>
+            <span class="token string">"args"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+                <span class="token string">"-synctex=1"</span><span class="token punctuation">,</span>
+                <span class="token string">"-interaction=nonstopmode"</span><span class="token punctuation">,</span>
+                <span class="token string">"-file-line-error"</span><span class="token punctuation">,</span>
+                <span class="token string">"%DOCFILE%"</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// Windows Biber 编译</span>
+            <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"Windows Biber"</span><span class="token punctuation">,</span>
+            <span class="token string">"command"</span><span class="token punctuation">:</span> <span class="token string">"biber"</span><span class="token punctuation">,</span>
+            <span class="token string">"args"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+                <span class="token string">"%DOCFILE%"</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+         <span class="token punctuation">{</span>
+        <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"bibtex"</span><span class="token punctuation">,</span>
+        <span class="token string">"command"</span><span class="token punctuation">:</span> <span class="token string">"bibtex"</span><span class="token punctuation">,</span>
+        <span class="token string">"args"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+            <span class="token string">"%DOCFILE%"</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 这是一些编译方案，会出现在 GUI 菜单里</span>
+    <span class="token string">"latex-workshop.latex.recipes"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 1.1 Windows 编译简单的小文档，这个选项不太常用，因为绝大多数文章都需要有参考文献索引</span>
+            <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"Windows XeLaTeX 简单编译"</span><span class="token punctuation">,</span>
+            <span class="token string">"tools"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+                <span class="token string">"xelatex"</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+            <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"pdflatex"</span><span class="token punctuation">,</span>
+            <span class="token string">"tools"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+                <span class="token string">"pdflatex"</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 1.2 Windows 编译带有索引的论文，需要进行四次编译；-> 符号只是一种标记而已，没有程序上的意义</span>
+            <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"Windows xe->bib->xe->xe 复杂编译"</span><span class="token punctuation">,</span>
+            <span class="token string">"tools"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+                <span class="token string">"xelatex"</span><span class="token punctuation">,</span>
+                <span class="token string">"bibtex"</span><span class="token punctuation">,</span>
+                <span class="token string">"xelatex"</span><span class="token punctuation">,</span>
+                <span class="token string">"xelatex"</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+         <span class="token punctuation">{</span>
+            <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"pdf->bib->pdf->pdf"</span><span class="token punctuation">,</span>
+            <span class="token string">"tools"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+                <span class="token string">"pdflatex"</span><span class="token punctuation">,</span>
+                <span class="token string">"bibtex"</span><span class="token punctuation">,</span>
+                <span class="token string">"pdflatex"</span><span class="token punctuation">,</span>
+                <span class="token string">"pdflatex"</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 清空中间文件</span>
+    <span class="token string">"latex-workshop.latex.clean.fileTypes"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string">"*.aux"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.bbl"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.blg"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.idx"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.ind"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.lof"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.lot"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.out"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.toc"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.acn"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.acr"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.alg"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.glg"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.glo"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.gls"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.ist"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.fls"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.log"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.fdb_latexmk"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.bcf"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.run.xml"</span><span class="token punctuation">,</span>
+        <span class="token string">"*.synctex.gz"</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token comment" spellcheck="true">// ======================== LaTeX 设置 END ========================</span></code></pre>
+<p>​          <img src="/2021/01/08/latex-de-an-zhuang-yu-pei-zhi/image-20210107223057127.png" class="" title="最后结果界面展示"></p>
+<p><a target="_blank" rel="noopener" href="https://sspai.com/post/60844">一个参考：少数派 使用 Git+LaTeX 完成你的毕业设计</a></p>
+<h5 id="一些快捷键"><a href="#一些快捷键" class="headerlink" title="一些快捷键"></a>一些快捷键</h5><p>可在<code>.tex</code>文件首行指定编译方式。如<code>%! TEX program = pdflatex</code>表示用<code>latexpdf</code>编译文件。<code>%! TEX program = xelatex</code>表示用<code>xelatex</code>编译文件。</p>
+<p>多个文件情况，可以用<code>%! TEX root</code>指定主文件，<code>%! TEX bib</code>指定<code>bib</code>的编译方式</p>
+<h5 id="如果编译报错"><a href="#如果编译报错" class="headerlink" title="如果编译报错"></a>如果编译报错</h5><p>如果报错：<strong>Recipe terminated with fatal error: spawn xelatex ENOENT</strong> 等</p>
+<p>可检查自己的环境变量，<strong>默认应该是只在用户变量里安装</strong>，<strong>自己添加到系统变量的<code>PATH</code>里</strong>，直到VScode里可以检测到(亲测可用，原来是只有cmd里能检测到！)</p>
+<ul>
+<li>如果添加到系统变量的PATH仍然不能使用，重启电脑即可。</li>
+</ul>
+<h3 id="TexLive在Neovim中的配置"><a href="#TexLive在Neovim中的配置" class="headerlink" title="TexLive在Neovim中的配置"></a>TexLive在Neovim中的配置</h3><p>专为 LaTeX 编写设计的 <a target="_blank" rel="noopener" href="https://github.com/lervag/vimtex">vimtex</a> 插件是 Neovim 撰写 LaTeX 的绝佳搭档，我们将使用 vimtex 来辅助我们在 Neovim 中撰写 LaTeX 项目。默认安装情况下，在 Linux 与 macOS 中的 Neovim 配置文件位于 <code>~/.config/nvim/init.vim</code>，在 Windows 中位于 <code>%LOCALAPPDATA%\\nvim\\init.vim</code>，我们后续的配置操作都将会直接更改这一配置文件。</p>
+<p>待续。。。。 </p>
+<p>安装完成vimtux插件后，需要在init.vim中配置相关操作。</p>
+<p><a target="_blank" rel="noopener" href="https://sspai.com/post/64080">使用Neovim和vimtex高效撰写LaTex学术论文</a></p>
+<p><a target="_blank" rel="noopener" href="https://macplay.github.io/posts/shi-yong-latexmk-bian-yi-tex-wen-jian/">使用 Latexmk 编译 tex 文件</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Null_0_lluN/article/details/108456462">vimtex的配置</a></p>
+<h3 id="LaTeX编译流程"><a href="#LaTeX编译流程" class="headerlink" title="LaTeX编译流程"></a>LaTeX编译流程</h3><h3 id="撰写、预览-LaTeX-文档时，编辑器背后究竟在干什么？"><a href="#撰写、预览-LaTeX-文档时，编辑器背后究竟在干什么？" class="headerlink" title="撰写、预览 LaTeX 文档时，编辑器背后究竟在干什么？"></a>撰写、预览 LaTeX 文档时，编辑器背后究竟在干什么？</h3><p>很多集成度很高的编辑器（比如 TeXstudio）将编译 LaTeX 文档的整个过程隐藏在复杂的界面背后，实际上不易于我们理解 LaTeX 的完整编译闭环。因此，当我们在使用 Neovim 或者其他编辑器来撰写 LaTeX 文档时，我们实际上是做这样的一件事情：</p>
+<ul>
+<li>我们使用纯文本编辑器（Neovim）编辑 <code>.tex</code> 文件的文本内容，也就是 LaTeX 文档本身；</li>
+<li>在后台运行的latexmk发现我们的.tex文件内容发生了变化，于是开始编译新增内容：<ul>
+<li><code>latexmk</code> 会根据我们的 <code>.tex</code> 文件具体更改内容动态的调整编译命令和编译次数；</li>
+<li>比如新增了参考文献的引用，则需要使用 <code>biber</code> 编译，或是增加了新的图表以及相应的引用，则需要两次至四次的调用 <code>pdflatex</code> 编译文档……</li>
+</ul>
+</li>
+<li>编译后会生成相应的 <code>.pdf</code> 文件来给我们预览，我们使用合适的 PDF 阅读器打开即可；</li>
+<li>最后，同步编辑器和 PDF 阅读器的显示位置的任务，通常会使用 SyncTeX 来完成。 </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/LaTex/" rel="tag"># LaTex</a>
+              <a href="/tags/Neovim/" rel="tag"># Neovim</a>
+              <a href="/tags/vsCode/" rel="tag"># vsCode</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/08/powershell-she-zhi-dai-li/" rel="prev" title="powershell设置代理">
+      <i class="fa fa-chevron-left"></i> powershell设置代理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/08/neovim-pei-zhi-cha-jian/" rel="next" title="Neovim配置插件">
+      Neovim配置插件 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#TexLive%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">TexLive的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BD"><span class="nav-number">1.0.1.</span> <span class="nav-text">官网下载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TexLive%E5%9C%A8VSCode%E4%B8%AD%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">TexLive在VSCode中的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-number">2.0.1.</span> <span class="nav-text">一些快捷键</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E7%BC%96%E8%AF%91%E6%8A%A5%E9%94%99"><span class="nav-number">2.0.2.</span> <span class="nav-text">如果编译报错</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TexLive%E5%9C%A8Neovim%E4%B8%AD%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">TexLive在Neovim中的配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LaTeX%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">LaTeX编译流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%92%B0%E5%86%99%E3%80%81%E9%A2%84%E8%A7%88-LaTeX-%E6%96%87%E6%A1%A3%E6%97%B6%EF%BC%8C%E7%BC%96%E8%BE%91%E5%99%A8%E8%83%8C%E5%90%8E%E7%A9%B6%E7%AB%9F%E5%9C%A8%E5%B9%B2%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">撰写、预览 LaTeX 文档时，编辑器背后究竟在干什么？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="guoyawen"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">guoyawen</p>
+  <div class="site-description" itemprop="description">一个浪费时间的网站</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/trafalgarSX" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;trafalgarSX" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1148636359g@gmail.com" title="E-Mail → mailto:1148636359g@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guoyawen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

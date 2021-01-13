@@ -193,6 +193,496 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/" class="post-title-link" itemprop="url">spring注释/xml配置开发区别</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-07 21:48:34" itemprop="dateCreated datePublished" datetime="2020-12-07T21:48:34Z">2020-12-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">spring学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<p><strong>XML开发方式</strong>（XML配置繁琐）</p>
+<p><strong>Spring注解方式（有助于学习SpringBoot）</strong></p>
+<hr>
+<p>主要内容：</p>
+<ul>
+<li>IOC与DI</li>
+<li>Spring的3种编程风格与2种注入方式</li>
+<li>1️⃣XML配置开发：<bean>描述依赖关系</bean></li>
+<li>自动装配：让<bean>职责单一化</bean></li>
+<li>2️⃣XML+注解：XML+<a href="context:component-scan">context:component-scan</a>+@Component()</li>
+<li>@Autowired的小秘密</li>
+<li>2️⃣JavaConfig+注解：@Configuration+@ComponentScan+@Component</li>
+<li>3️⃣JavaConfig方式：@Configuration+@Bean</li>
+<li>大乱斗：@ImportResource、@Component、@Bean</li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/72668451">主要参考内容</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/shz365/p/5088289.html">配合参考内容</a></li>
+</ul>
+<hr>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/12/08/spring-zhu-shi-xml-pei-zhi-kai-fa-qu-bie/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/12/05/springboot-xue-xi-er/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/05/springboot-xue-xi-er/" class="post-title-link" itemprop="url">springboot学习二</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-04 22:30:16" itemprop="dateCreated datePublished" datetime="2020-12-04T22:30:16Z">2020-12-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/springboot%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">springboot学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Spring注解-Resource和-Autowired区别对比"><a href="#Spring注解-Resource和-Autowired区别对比" class="headerlink" title="Spring注解@Resource和@Autowired区别对比"></a>Spring注解@Resource和@Autowired区别对比</h3><p>@Resource和@Autowired都是做bean的注入时使用，其实**@Resource并不是Spring的注解**，它的包是javax.annotation.Resource，需要导入，但是Spring支持该注解的注入。</p>
+<p><strong>共同点</strong>：<br>两者都可以写在字段和setter方法上。两者如果都写在字段上，那么就不需要再写setter方法。</p>
+<p><strong>不同点：</strong><br>@Autowired为Spring提供的注解，需要导入包org.springframework.beans.factory.annotation.Autowired;<strong>只按照byType注入。</strong></p>
+<p><strong>@Autowired注解是按照类型（byType）</strong>装配依赖对象，默认情况下它要求依赖对象必须存在，如果允许null值，可以设置它的required属性为false。如果我们想使用按照名称（byName）来装配，可以结合@Qualifier注解一起使用</p>
+<p><strong>@Resource默认按照ByName自动注入</strong>，由J2EE提供，需要导入包javax.annotation.Resource。@Resource有<strong>两个重要的属性：name和type</strong>，而Spring将@Resource注解的name属性解析为bean的名字，而type属性则解析为bean的类型。所以，如果使用name属性，则使用byName的自动注入策略，而使用type属性时则使用byType自动注入策略。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/12/05/springboot-xue-xi-er/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/12/04/springboot-quan-ju-yi-chang-chu-li/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/04/springboot-quan-ju-yi-chang-chu-li/" class="post-title-link" itemprop="url">springboot学习一</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-03 16:39:06" itemprop="dateCreated datePublished" datetime="2020-12-03T16:39:06Z">2020-12-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/springboot%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">springboot学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="SpringBoot继承AbstractErrorController实现全局异常处理"><a href="#SpringBoot继承AbstractErrorController实现全局异常处理" class="headerlink" title="SpringBoot继承AbstractErrorController实现全局异常处理"></a>SpringBoot继承AbstractErrorController实现全局异常处理</h3><p>  项目中需要一个全局异常，防止未处理的异常信息直接暴露给前端（就是运行报错，错误栈直接在网页展示的情况），这影响用户的体验。</p>
+<ul>
+<li>SpringBoot中可以使用<strong>ControllerAdvice</strong>和<strong>ExceptionHandler</strong>这个两个注解来做全局异常（只能能处理Controller层之内的异常，对于渲染层及其他的异常是无能为力的。）<strong>ControllerAdvice</strong>定义统一的异常处理类，<strong>ExceptionHandler</strong>定义函数针对的异常类型，最后将Exception对象和请求URL映射到error.html中。<br><a target="_blank" rel="noopener" href="http://blog.didispace.com/springbootexception/">学习相关内容连接</a></li>
+<li>另一种是本文提到的方式</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/12/04/springboot-quan-ju-yi-chang-chu-li/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/12/03/xue-xi-java-de-zheng-ze/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/03/xue-xi-java-de-zheng-ze/" class="post-title-link" itemprop="url">学习java的正则</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-02 23:07:39" itemprop="dateCreated datePublished" datetime="2020-12-02T23:07:39Z">2020-12-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">学习记录</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Java-regex包"><a href="#Java-regex包" class="headerlink" title="Java regex包"></a>Java regex包</h3><ul>
+<li>Pattern类：pattern对象是一个正则表达式的编译表示。<br><code>Pattern pattern1 = Pattern.compile(pattern);</code></li>
+<li>Matcher类：matcher对象是对输入字符串进行解释和匹配操作的引擎。需要调用Pattern对象的matcher方法来获得一个Matcher对象。<br><code>Matcher matcher = pattern1.matcher(line);</code></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/12/03/xue-xi-java-de-zheng-ze/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/12/02/fen-bian-shi-ti-lei/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/02/fen-bian-shi-ti-lei/" class="post-title-link" itemprop="url">分辨实体类</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-01 21:54:09" itemprop="dateCreated datePublished" datetime="2020-12-01T21:54:09Z">2020-12-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">Spring学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <center style="font-size:25px;font-weight:bold">Bean的分辨</center>
+
+<h4 id="POJO-Plain-Old-Java-Object"><a href="#POJO-Plain-Old-Java-Object" class="headerlink" title="POJO(Plain Old Java Object)"></a>POJO(Plain Old Java Object)</h4><p>pojo是DO/DTO/BO/VO的统称，禁止命名成 xxxPOJO</p>
+<ul>
+<li>DO(Data Object):**与数据库表结构一一对应，通过DAO层向上传输数据源对象,**用来和单表一一对应的实体类。</li>
+<li>DTO（Data Transfer Object）：数据传输对象，Service或者Manager向外传输的对象，<strong>比如Controller的入参xxxReqDTO,Service层的出参 xxxRespDTO</strong></li>
+<li>BO（Businese Object):业务对象。由Service层输出的封装业务逻辑对象。</li>
+<li>AO（Application Object):应用对象。在Web层与Service层之间抽象的复用对象模型，极为贴近展示层，服务都不高</li>
+<li>VO（View Object):显示层对象，<strong>通常是Web向模板渲染引擎层传输的对象</strong></li>
+<li>POJO(Plain Ordinary Java Object):POJO专指只有setter/getter/toString的简单类，包括DO/DTO/BO/VO等</li>
+<li>PO(Persistant Object)可以看成是与数据库中的表相映射的java对象。比如PO对应数据表中的某一条记录，多个记录可以用PO的集合，PO应该不包含任何对数据库的操作。，由get/set/序列化组成。</li>
+<li>Query:数据查询对象，各层接受上层的查询请求。注意超过两个参数的查询封装，禁止使用Map类来传输。</li>
+</ul>
+<p><strong><img src="/2020/12/02/fen-bian-shi-ti-lei/1736f3263e8988ba" class="" title="img"></strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/12/01/learning-redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guoyawen">
+      <meta itemprop="description" content="一个浪费时间的网站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="guoBlog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/01/learning-redis/" class="post-title-link" itemprop="url">Learning Redis</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-30 23:27:53" itemprop="dateCreated datePublished" datetime="2020-11-30T23:27:53Z">2020-11-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">学习记录</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <center style="font-weight:bold;font-size:25px">Redis/MySQL</center>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>NoSQL, NOt only SQL, 高并发、海量数据存储解决方案。Redis、MongoDB等内存数据库。</p>
+<p>Redis是完全开源的，用ANSI C编写的一个高性能的key-value数据库。</p>
+<p>三个特点：</p>
+<ul>
+<li>Redis支持数据的持久化，可以将内存中的数据存储到硬盘上，重启时可以使用。</li>
+<li>Redis支持 list,set,zset,hash等数据结构。</li>
+<li>Redis支持数据的备份，即<strong>master-slave模式的数据备份</strong>(不懂)</li>
+<li>速度快、支持语言多、持久化、多种数据结构、主从复制以及高可用与分布式。</li>
+</ul>
+<p><escape></escape></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/12/01/learning-redis/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://trafalgarsx.github.io/2020/11/24/python-pa-chong/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -612,20 +1102,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -659,8 +1149,8 @@
 
 <div class="copyright">
   
-  &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
