@@ -1860,7 +1860,13 @@ spam<span class="token punctuation">(</span><span class="token punctuation">)</s
   <entry>
     <title>python列表元组字典</title>
     <url>/2021/01/14/python-lie-biao-yuan-zu-zi-dian/</url>
-    <content><![CDATA[<p>&lt;%- toc(post.content, {list_number: false}) %&gt;</p>
+    <content><![CDATA[<p>列表</p>
+<p>元组</p>
+<p>​    用list()和tuple()函数来转换类型</p>
+<p>​    引用</p>
+<p>​    传递引用</p>
+<p>字典</p>
+<p>​    字典与列表</p>
 <a id="more"></a>
 
 <h4 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h4><p><strong>“列表”是一个值</strong>，它包含多个字构成的序列。<br><strong>术语“列表值”指的是列表本身</strong>（它作为一个值，可以保存在变量中，或传递给函数，像所有其他值一样），而不是指列表值之内的那些值</p>
